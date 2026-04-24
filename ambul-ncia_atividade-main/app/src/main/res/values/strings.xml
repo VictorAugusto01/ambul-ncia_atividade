@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SOS Leitos</string>
+    <string name="hint_bairro">Selecione o bairro da ambulância</string>
+    <string name="btn_buscar">INICIAR BUSCA BFS</string>
+    <string name="resultado_titulo">Hospital Recomendado</string>
+    <string name="log_aguardando">Aguardando busca...</string>
+    <string name="erro_bairro_nao_encontrado">Bairro não encontrado no grafo.</string>
+    <string name="nenhum_hospital">Nenhum hospital encontrado na região.</string>
+</resources>

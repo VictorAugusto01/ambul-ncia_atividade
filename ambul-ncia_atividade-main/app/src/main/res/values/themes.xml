@@ -1,0 +1,23 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema legado (mantido para compatibilidade) -->
+    <style name="Theme.Ambulânciaatividade" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/vermelho_sos</item>
+        <item name="colorPrimaryVariant">@color/vermelho_escuro</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/azul_info</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/vermelho_escuro</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+    </style>
+
+    <!-- Tema SOS Leitos principal -->
+    <style name="Theme.SOSLeitos" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/vermelho_sos</item>
+        <item name="colorPrimaryVariant">@color/vermelho_escuro</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/azul_info</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/vermelho_escuro</item>
+        <item name="android:windowBackground">@color/bg_dark</item>
+    </style>
+</resources>
