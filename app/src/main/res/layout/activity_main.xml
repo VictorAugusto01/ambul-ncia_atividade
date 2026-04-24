@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+        <!-- HEADER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/vermelho_sos"
+            android:orientation="vertical"
+            android:paddingTop="48dp"
+            android:paddingBottom="24dp"
+            android:paddingHorizontal="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🚑"
+                    android:textSize="32sp"
+                    android:layout_marginEnd="12dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SOS LEITOS"
+                        android:textColor="@color/white"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.15"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Roteamento Inteligente de Ambulâncias"
+                        android:textColor="#FFDDDDDD"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- SECTION: LOCALIZAÇÃO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📍 LOCALIZAÇÃO DA AMBULÂNCIA"
+                android:textColor="@color/label_cinza"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="8dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerBairro"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_spinner"
+                android:paddingHorizontal="16dp"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <!-- SECTION: MAPA DO GRAFO (lista de bairros) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🏥 HOSPITAIS CADASTRADOS"
+                    android:textColor="@color/label_cinza"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"/>
+
+                <TextView
+                    android:id="@+id/tvTotalHospitais"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 unidades"
+                    android:textColor="@color/azul_info"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <!-- RecyclerView substituído por LinearLayout dinâmico para simplicidade -->
+            <LinearLayout
+                android:id="@+id/containerHospitais"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
+
+        </LinearLayout>
+
+        <!-- BOTÃO BUSCAR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <Button
+                android:id="@+id/btnBuscar"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="INICIAR BUSCA BFS"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08"
+                android:background="@drawable/bg_botao_buscar"
+                android:elevation="4dp"/>
+
+        </LinearLayout>
+
+        <!-- RESULTADO -->
+        <LinearLayout
+            android:id="@+id/cardResultado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:margin="20dp"
+            android:padding="20dp"
+            android:background="@drawable/bg_card_resultado"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✅ HOSPITAL RECOMENDADO"
+                android:textColor="@color/verde_ok"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvNomeHospital"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/tvBairroHospital"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#FFAAAAAA"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Detalhes -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_chip_info"
+                    android:layout_marginEnd="8dp">
+
+                    <TextView
+                        android:id="@+id/tvVagasLivres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textColor="@color/verde_ok"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="leitos livres"
+                        android:textColor="#FF888888"
+                        android:textSize="11sp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:padding="12dp"
+                    android:background="@drawable/bg_chip_info"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:id="@+id/tvDistancia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="--"
+                        android:textColor="@color/azul_info"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="bairros de distância"
+                        android:textColor="#FF888888"
+                        android:textSize="11sp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- RESULTADO: CONTINGÊNCIA -->
+        <LinearLayout
+            android:id="@+id/cardContingencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:margin="20dp"
+            android:padding="20dp"
+            android:background="@drawable/bg_card_contingencia"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚠️ PLANO DE CONTINGÊNCIA"
+                android:textColor="@color/amarelo_alerta"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvNomeContingencia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nenhum hospital com vagas livres foi encontrado em até 3 bairros. Encaminhando ao hospital menos sobrecarregado da região."
+                android:textColor="#FFBBBBBB"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+
+        <!-- LOG BFS -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔍 LOG DO ALGORITMO BFS"
+                android:textColor="@color/label_cinza"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="14dp"
+                android:background="@drawable/bg_log">
+
+                <TextView
+                    android:id="@+id/tvLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Aguardando busca..."
+                    android:textColor="#FF66CC66"
+                    android:textSize="12sp"
+                    android:fontFamily="monospace"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
