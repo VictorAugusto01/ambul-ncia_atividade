@@ -13,12 +13,16 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.ambulncia_atividade.domain.AmbulanciaAtendimento;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import com.example.ambulncia_atividade.domain.AmbulanciaAtendimento;
+import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
     // ========== Dados de exibição ==========
     // bairro -> lista de strings descritivas dos hospitais
-    private final Map<String, List<String[]>> dadosHospitais = new LinkedHashMap<>();
+    private Map<String, List<String[]>> dadosHospitais;
     // bairro -> bairros vizinhos
-    private final Map<String, List<String>> dadosGrafo = new LinkedHashMap<>();
+    private Map<String, List<String>> dadosGrafo;
 
     // ========== Views ==========
     private Spinner spinnerBairro;
@@ -47,10 +51,17 @@ public class MainActivity extends AppCompatActivity {
 
     private String bairroSelecionado = null;
 
+    public MainActivity() {
+        super();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dadosHospitais = new LinkedHashMap<>();
+        dadosGrafo = new LinkedHashMap<>();
 
         inicializarViews();
         inicializarDados();
@@ -83,91 +94,55 @@ public class MainActivity extends AppCompatActivity {
      *
      * String[] = { nome, total, ocupados }
      */
+    // Inicialização dos Dados
     private void inicializarDados() {
-        sistema = new AmbulanciaAtendimento();
+        // 1. Instancia o sistema passando o "Contexto" (this)
+        sistema = new AmbulanciaAtendimento(this);
 
-        // --- Bairros ---
-        String[] bairros = {
-            "Lapa", "Pinheiros", "Vila Madalena", "Perdizes",
-            "Alto de Pinheiros", "Itaim Bibi", "Butantã", "Morumbi",
-            "Campo Limpo", "Capão Redondo", "Santo Amaro", "Interlagos"
-        };
+        // 2. Abre a ligação com a Base de Dados em modo de leitura
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        for (String b : bairros) {
-            sistema.adicionarBairro(b);
-            dadosGrafo.put(b, new ArrayList<>());
-            dadosHospitais.put(b, new ArrayList<>());
+        // 3. Carregar Bairros para o Spinner e para a UI
+        Cursor cBairros = db.rawQuery("SELECT nome FROM bairros", null);
+        if (cBairros.moveToFirst()) {
+            do {
+                String b = cBairros.getString(0);
+                dadosGrafo.put(b, new ArrayList<>());
+                dadosHospitais.put(b, new ArrayList<>());
+            } while (cBairros.moveToNext());
         }
+        cBairros.close();
 
-        // --- Conexões do grafo ---
-        conectar("Lapa", "Pinheiros");
-        conectar("Lapa", "Perdizes");
-        conectar("Lapa", "Alto de Pinheiros");
-        conectar("Pinheiros", "Vila Madalena");
-        conectar("Pinheiros", "Itaim Bibi");
-        conectar("Pinheiros", "Alto de Pinheiros");
-        conectar("Vila Madalena", "Perdizes");
-        conectar("Perdizes", "Lapa");
-        conectar("Alto de Pinheiros", "Butantã");
-        conectar("Itaim Bibi", "Morumbi");
-        conectar("Itaim Bibi", "Santo Amaro");
-        conectar("Butantã", "Morumbi");
-        conectar("Morumbi", "Campo Limpo");
-        conectar("Campo Limpo", "Capão Redondo");
-        conectar("Campo Limpo", "Santo Amaro");
-        conectar("Santo Amaro", "Interlagos");
-        conectar("Capão Redondo", "Interlagos");
+        // 4. Carregar as Conexões (Adjacências) para a UI
+        Cursor cAdj = db.rawQuery("SELECT bairro_origem, bairro_destino FROM adjacencias_grafo", null);
+        if (cAdj.moveToFirst()) {
+            do {
+                String origem = cAdj.getString(0);
+                String destino = cAdj.getString(1);
+                if (dadosGrafo.containsKey(origem)) {
+                    dadosGrafo.get(origem).add(destino);
+                }
+            } while (cAdj.moveToNext());
+        }
+        cAdj.close();
 
-        // --- Hospitais ---
-        // Formato: adicionarHospital(nome, bairro, total, ocupados)
-        addHospital("Hospital São Luiz - Unidade Anália", "Lapa", 120, 115);        // quase cheio
-        addHospital("UPA Lapa", "Lapa", 40, 20);                                    // bastante vaga
+        // 5. Carregar os Hospitais para os Cards Coloridos
+        Cursor cHosp = db.rawQuery("SELECT nome, nome_bairro, vagas_totais, vagas_ocupadas FROM hospitais", null);
+        if (cHosp.moveToFirst()) {
+            do {
+                String nome = cHosp.getString(0);
+                String bairro = cHosp.getString(1);
+                String total = String.valueOf(cHosp.getInt(2));
+                String ocupados = String.valueOf(cHosp.getInt(3));
 
-        addHospital("Hospital das Clínicas - Pinheiros", "Pinheiros", 300, 298);    // lotado
-        addHospital("UPA Pinheiros", "Pinheiros", 60, 60);                          // lotado
-
-        addHospital("Hospital Santa Paula", "Vila Madalena", 90, 45);               // 50%
-        addHospital("UPA Vila Madalena", "Vila Madalena", 30, 30);                  // lotado
-
-        addHospital("Hospital Beneficência Portuguesa", "Perdizes", 200, 195);      // quase cheio
-        addHospital("UPA Perdizes", "Perdizes", 50, 10);                            // muita vaga
-
-        addHospital("Hospital Sírio-Libanês", "Alto de Pinheiros", 180, 180);       // lotado
-        addHospital("UPA Alto Pinheiros", "Alto de Pinheiros", 35, 35);             // lotado
-
-        addHospital("Hospital Albert Einstein", "Itaim Bibi", 250, 250);            // lotado
-        addHospital("UPA Itaim Bibi", "Itaim Bibi", 45, 44);                       // quase cheio
-
-        addHospital("Hospital Universitário USP", "Butantã", 200, 140);             // 70%
-        addHospital("UPA Butantã", "Butantã", 50, 50);                              // lotado
-
-        addHospital("Hospital Morumbi", "Morumbi", 100, 100);                       // lotado
-        addHospital("UPA Morumbi", "Morumbi", 40, 38);
-
-        addHospital("UPA Campo Limpo", "Campo Limpo", 60, 20);                      // muita vaga
-        addHospital("AME Campo Limpo", "Campo Limpo", 80, 75);
-
-        addHospital("UPA Capão Redondo", "Capão Redondo", 55, 55);                  // lotado
-        addHospital("Hospital Capão Redondo", "Capão Redondo", 70, 60);
-
-        addHospital("Hospital do Campo", "Santo Amaro", 110, 105);
-        addHospital("UPA Santo Amaro", "Santo Amaro", 45, 10);                      // muita vaga
-
-        addHospital("UPA Interlagos", "Interlagos", 50, 50);                        // lotado
-        addHospital("Hospital Interlagos", "Interlagos", 80, 70);
-    }
-
-    /** Wrapper que conecta no sistema E registra no mapa de UI */
-    private void conectar(String b1, String b2) {
-        sistema.conectarBairros(b1, b2);
-        dadosGrafo.get(b1).add(b2);
-        dadosGrafo.get(b2).add(b1);
-    }
-
-    /** Wrapper que adiciona hospital no sistema E registra no mapa de UI */
-    private void addHospital(String nome, String bairro, int total, int ocupados) {
-        sistema.adicionarHospital(nome, bairro, total, ocupados);
-        dadosHospitais.get(bairro).add(new String[]{ nome, String.valueOf(total), String.valueOf(ocupados) });
+                if (dadosHospitais.containsKey(bairro)) {
+                    dadosHospitais.get(bairro).add(new String[]{nome, total, ocupados});
+                }
+            } while (cHosp.moveToNext());
+        }
+        cHosp.close();
+        db.close(); // Fechar a ligação à base de dados para poupar memória do telemóvel
     }
 
     // =========================================================
@@ -177,10 +152,20 @@ public class MainActivity extends AppCompatActivity {
     private void popularInterface() {
         // Spinner com bairros
         List<String> bairros = new ArrayList<>(dadosGrafo.keySet());
+
+        // Só tenta pegar o bairro se a lista não estiver vazia
+        if (!bairros.isEmpty()) {
+            bairroSelecionado = bairros.get(0);
+        } else {
+            bairros.add("Nenhum bairro cadastrado");
+            bairroSelecionado = "Nenhum bairro cadastrado";
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, bairros);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerBairro.setAdapter(adapter);
+
         bairroSelecionado = bairros.get(0);
 
         // Contador total de hospitais
@@ -419,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
     //  CLASSES DE APOIO INTERNAS
     // =========================================================
 
-    static class HospitalSimples {
+    public static class HospitalSimples {
         String nome, bairro;
         int total, ocupados, nivel;
 
@@ -432,7 +417,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    static class ResultadoBusca {
+    public static class ResultadoBusca {
         String nomeHospital;
         String bairro;
         int vagasLivres;
