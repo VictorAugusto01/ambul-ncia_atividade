@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark"
+    android:gravity="center"
+    android:padding="32dp">
+
+    <!-- Cruz da emergência -->
+    <FrameLayout
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="24dp">
+
+        <View
+            android:layout_width="72dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/vermelho_sos"/>
+
+        <View
+            android:layout_width="24dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/vermelho_sos"/>
+    </FrameLayout>
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SOS LEITOS"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.15"
+        android:layout_marginBottom="6dp"/>
+
+    <!-- Subtítulo -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Roteamento Inteligente\nde Ambulâncias"
+        android:textColor="#FF888888"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Badge -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Zona Oeste · São Paulo"
+        android:textColor="#FFEF5350"
+        android:textSize="11sp"
+        android:background="@drawable/bg_badge_splash"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="5dp"
+        android:layout_marginBottom="48dp"/>
+
+    <!-- Botão Entrar -->
+    <Button
+        android:id="@+id/btnEntrarSplash"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="ENTRAR"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.08"
+        android:background="@drawable/bg_botao_buscar"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Botão Criar Conta -->
+    <Button
+        android:id="@+id/btnCriarContaSplash"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="CRIAR CONTA"
+        android:textColor="#FF888888"
+        android:textSize="13sp"
+        android:background="@drawable/bg_botao_secundario"/>
+
+    <!-- Versão -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="v1.0 · Desenvolvido para PDM 2025"
+        android:textColor="#FF333333"
+        android:textSize="10sp"
+        android:layout_marginTop="32dp"/>
+
+</LinearLayout>
