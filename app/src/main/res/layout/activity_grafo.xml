@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_dark">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/vermelho_sos"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="44dp"
+        android:paddingBottom="14dp"
+        android:paddingHorizontal="16dp">
+
+        <Button
+            android:id="@+id/btnVoltarGrafo"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="←"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:background="@null"
+            android:padding="0dp"
+            android:layout_marginEnd="8dp"/>
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="🚑" android:textSize="22sp" android:layout_marginEnd="10dp"/>
+
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="SOS LEITOS" android:textColor="@color/white"
+                android:textSize="16sp" android:textStyle="bold" android:letterSpacing="0.08"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Visualização do Grafo" android:textColor="#FFDDDDDD" android:textSize="10sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Controles -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="12dp">
+
+        <Spinner
+            android:id="@+id/spinnerBairroGrafo"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_spinner"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnBuscarGrafo"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:text="▶ BUSCAR"
+            android:textColor="@color/white"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_botao_buscar"
+            android:paddingHorizontal="14dp"
+            android:layout_marginEnd="6dp"/>
+
+        <Button
+            android:id="@+id/btnResetGrafo"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:text="↺"
+            android:textColor="#FF888888"
+            android:textSize="18sp"
+            android:background="@drawable/bg_chip_normal"/>
+    </LinearLayout>
+
+    <!-- Canvas do grafo -->
+    <com.example.ambulncia_atividade.GrafoView
+        android:id="@+id/grafoView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="8dp"
+        android:background="@color/bg_card"/>
+
+    <!-- Legenda -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="6dp">
+
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginEnd="12dp">
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/verde_ok" android:layout_marginEnd="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="vagas" android:textColor="#FF777777" android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginEnd="12dp">
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/amarelo_alerta" android:layout_marginEnd="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="quase cheio" android:textColor="#FF777777" android:textSize="10sp"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:orientation="horizontal" android:gravity="center_vertical">
+            <View android:layout_width="10dp" android:layout_height="10dp"
+                android:background="@color/vermelho_sos" android:layout_marginEnd="4dp"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="lotado" android:textColor="#FF777777" android:textSize="10sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Card resultado -->
+    <LinearLayout
+        android:id="@+id/cardResultadoGrafo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:margin="10dp"
+        android:padding="12dp"
+        android:background="@drawable/bg_card_resultado"
+        android:visibility="gone">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="✅ HOSPITAL RECOMENDADO"
+            android:textColor="@color/verde_ok" android:textSize="9sp"
+            android:textStyle="bold" android:letterSpacing="0.1" android:layout_marginBottom="4dp"/>
+
+        <TextView android:id="@+id/tvNomeResultadoGrafo"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@color/white" android:textSize="16sp" android:textStyle="bold"
+            android:layout_marginBottom="6dp"/>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/bg_chip_info"
+                android:padding="8dp" android:layout_marginEnd="6dp">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/tvVagasResultadoGrafo"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="@color/verde_ok" android:textSize="14sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="leitos livres" android:textColor="#FF666666" android:textSize="9sp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:background="@drawable/bg_chip_info" android:padding="8dp">
+                <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/tvDistResultadoGrafo"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:textColor="@color/azul_info" android:textSize="14sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="de distância" android:textColor="#FF666666" android:textSize="9sp"/>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Card contingência -->
+    <LinearLayout
+        android:id="@+id/cardContingenciaGrafo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:margin="10dp"
+        android:padding="12dp"
+        android:background="@drawable/bg_card_contingencia"
+        android:visibility="gone">
+
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="⚠️ CONTINGÊNCIA"
+            android:textColor="@color/amarelo_alerta" android:textSize="9sp"
+            android:textStyle="bold" android:letterSpacing="0.1" android:layout_marginBottom="4dp"/>
+
+        <TextView android:id="@+id/tvNomeContingenciaGrafo"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:textColor="@color/white" android:textSize="14sp" android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- Log BFS -->
+    <ScrollView
+        android:id="@+id/logScrollGrafo"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:margin="10dp"
+        android:background="@drawable/bg_log">
+
+        <LinearLayout
+            android:id="@+id/logContainerGrafo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp"/>
+    </ScrollView>
+
+</LinearLayout>
