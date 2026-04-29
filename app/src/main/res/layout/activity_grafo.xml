@@ -126,7 +126,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:margin="10dp"
+        android:layout_margin="10dp"
         android:padding="12dp"
         android:background="@drawable/bg_card_resultado"
         android:visibility="gone">
@@ -175,7 +175,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:margin="10dp"
+        android:layout_margin="10dp"
         android:padding="12dp"
         android:background="@drawable/bg_card_contingencia"
         android:visibility="gone">
@@ -195,7 +195,7 @@
         android:id="@+id/logScrollGrafo"
         android:layout_width="match_parent"
         android:layout_height="90dp"
-        android:margin="10dp"
+        android:layout_margin="10dp"
         android:background="@drawable/bg_log">
 
         <LinearLayout

@@ -10,7 +10,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Informações do Banco
     private static final String DATABASE_NAME = "AmbulanciaDB.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,7 +39,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Tabela de Bairros (Os Nós do Grafo)
         String createTableBairros = "CREATE TABLE bairros (" +
-                "nome TEXT PRIMARY KEY)";
+                "nome TEXT PRIMARY KEY, " +
+                "x_pct REAL, " +
+                "y_pct REAL)";
 
         // Tabela de Adjacências (As Arestas do Grafo )
         // Se a Lapa faz fronteira com Pinheiros, gravamos (Lapa, Pinheiros)
@@ -80,33 +82,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
     public void popularDadosIniciais(SQLiteDatabase db) {
-        // Criando os Nós do Grafo (Bairros)
-        inserirBairro(db, "Lapa");
-        inserirBairro(db, "Pinheiros");
-        inserirBairro(db, "Butantã");
-        inserirBairro(db, "Morumbi");
+        // 1. Nós do Grafo (Bairros com X e Y para a UI da sua amiga)
+        inserirBairro(db, "Lapa", 0.18f, 0.12f);
+        inserirBairro(db, "Perdizes", 0.45f, 0.06f);
+        inserirBairro(db, "Vila Madalena", 0.72f, 0.15f);
+        inserirBairro(db, "Pinheiros", 0.70f, 0.38f);
+        inserirBairro(db, "Alto de Pinheiros", 0.36f, 0.30f);
+        inserirBairro(db, "Itaim Bibi", 0.80f, 0.58f);
+        inserirBairro(db, "Butantã", 0.18f, 0.45f);
+        inserirBairro(db, "Morumbi", 0.48f, 0.55f);
+        inserirBairro(db, "Santo Amaro", 0.75f, 0.76f);
+        inserirBairro(db, "Campo Limpo", 0.40f, 0.76f);
+        inserirBairro(db, "Capão Redondo", 0.18f, 0.76f);
+        inserirBairro(db, "Interlagos", 0.52f, 0.90f);
 
-        // Criando as Arestas do Grafo (Adjacências - Quem é vizinho de quem)
-        // Isso significa que a ambulância pode ir da Lapa para Pinheiros
-        inserirAdjacencia(db, "Lapa", "Pinheiros");
-        inserirAdjacencia(db, "Pinheiros", "Lapa"); // Grafo não-direcionado (Ida e Volta)
+        // 2. Arestas do Grafo (Ida e Volta para o BFS funcionar em ambos os sentidos)
+        String[][] conexoes = {
+                {"Lapa", "Perdizes"}, {"Lapa", "Alto de Pinheiros"}, {"Lapa", "Butantã"},
+                {"Perdizes", "Vila Madalena"}, {"Perdizes", "Alto de Pinheiros"},
+                {"Vila Madalena", "Pinheiros"}, {"Pinheiros", "Alto de Pinheiros"},
+                {"Pinheiros", "Itaim Bibi"}, {"Alto de Pinheiros", "Butantã"},
+                {"Itaim Bibi", "Morumbi"}, {"Itaim Bibi", "Santo Amaro"},
+                {"Butantã", "Morumbi"}, {"Morumbi", "Campo Limpo"},
+                {"Campo Limpo", "Capão Redondo"}, {"Campo Limpo", "Santo Amaro"},
+                {"Campo Limpo", "Interlagos"}, {"Santo Amaro", "Interlagos"},
+                {"Capão Redondo", "Interlagos"}
+        };
 
-        inserirAdjacencia(db, "Pinheiros", "Butantã");
-        inserirAdjacencia(db, "Butantã", "Pinheiros");
+        for (String[] c : conexoes) {
+            inserirAdjacencia(db, c[0], c[1]);
+            inserirAdjacencia(db, c[1], c[0]);
+        }
 
-        inserirAdjacencia(db, "Butantã", "Morumbi");
-        inserirAdjacencia(db, "Morumbi", "Butantã");
-
-        // Adicionando os Hospitais (Os dados dentro de cada Nó)
-        // Nome, Bairro, Vagas Totais, Vagas Ocupadas
-        inserirHospital(db, "Hospital Albert Einstein", "Morumbi", 200, 198); // Quase lotado
-        inserirHospital(db, "Hospital das Clínicas", "Pinheiros", 500, 450);
-        inserirHospital(db, "Hospital Metropolitano", "Lapa", 100, 20); // Bastante vaga livre
-        inserirHospital(db, "UPA Butantã", "Butantã", 50, 50); // 100% lotado
+        // 3. Hospitais (Vagas idênticas ao mockup visual)
+        inserirHospital(db, "Hospital Metropolitano", "Lapa", 160, 135);
+        inserirHospital(db, "São Camilo", "Perdizes", 250, 205);
+        inserirHospital(db, "Pérola Byington", "Vila Madalena", 120, 75);
+        inserirHospital(db, "Hospital das Clínicas", "Pinheiros", 360, 358);
+        inserirHospital(db, "PS Alto de Pinheiros", "Alto de Pinheiros", 215, 215);
+        inserirHospital(db, "São Luiz", "Itaim Bibi", 295, 294);
+        inserirHospital(db, "UPA Butantã", "Butantã", 250, 190);
+        inserirHospital(db, "Albert Einstein", "Morumbi", 140, 138);
+        inserirHospital(db, "Santa Casa S.A.", "Santo Amaro", 155, 115);
+        inserirHospital(db, "Hospital Campo Limpo", "Campo Limpo", 140, 95);
+        inserirHospital(db, "UBS Capão Redondo", "Capão Redondo", 125, 115);
+        inserirHospital(db, "Hospital Interlagos", "Interlagos", 130, 120);
     }
-    private void inserirBairro(SQLiteDatabase db, String nomeBairro) {
+    private void inserirBairro(SQLiteDatabase db, String nomeBairro, float xPct, float yPct) {
         ContentValues values = new ContentValues();
         values.put("nome", nomeBairro);
+        values.put("x_pct", xPct);
+        values.put("y_pct", yPct);
         db.insert("bairros", null, values);
     }
 

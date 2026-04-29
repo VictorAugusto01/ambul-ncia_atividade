@@ -1,5 +1,9 @@
 package com.example.ambulncia_atividade;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Button;
@@ -55,60 +59,50 @@ public class GrafoActivity extends AppCompatActivity {
 
     private void construirGrafo() {
         // Nós: id, xPct (0-1), yPct (0-1), totalLeitos, leitosOcupados
-        grafoView.adicionarNo("Lapa",              0.18f, 0.12f, 160, 135);
-        grafoView.adicionarNo("Perdizes",          0.45f, 0.06f, 250, 205);
-        grafoView.adicionarNo("Vila Madalena",     0.72f, 0.15f, 120,  75);
-        grafoView.adicionarNo("Pinheiros",         0.70f, 0.38f, 360, 358);
-        grafoView.adicionarNo("Alto de Pinheiros", 0.36f, 0.30f, 215, 215);
-        grafoView.adicionarNo("Itaim Bibi",        0.80f, 0.58f, 295, 294);
-        grafoView.adicionarNo("Butantã",           0.18f, 0.45f, 250, 190);
-        grafoView.adicionarNo("Morumbi",           0.48f, 0.55f, 140, 138);
-        grafoView.adicionarNo("Santo Amaro",       0.75f, 0.76f, 155, 115);
-        grafoView.adicionarNo("Campo Limpo",       0.40f, 0.76f, 140,  95);
-        grafoView.adicionarNo("Capão Redondo",     0.18f, 0.76f, 125, 115);
-        grafoView.adicionarNo("Interlagos",        0.52f, 0.90f, 130, 120);
+        // Abre conexão com seu banco de dados
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        grafoView.conectar("Lapa", "Perdizes");
-        grafoView.conectar("Lapa", "Alto de Pinheiros");
-        grafoView.conectar("Lapa", "Butantã");
-        grafoView.conectar("Perdizes", "Vila Madalena");
-        grafoView.conectar("Perdizes", "Alto de Pinheiros");
-        grafoView.conectar("Vila Madalena", "Pinheiros");
-        grafoView.conectar("Pinheiros", "Alto de Pinheiros");
-        grafoView.conectar("Pinheiros", "Itaim Bibi");
-        grafoView.conectar("Alto de Pinheiros", "Butantã");
-        grafoView.conectar("Itaim Bibi", "Morumbi");
-        grafoView.conectar("Itaim Bibi", "Santo Amaro");
-        grafoView.conectar("Butantã", "Morumbi");
-        grafoView.conectar("Morumbi", "Campo Limpo");
-        grafoView.conectar("Campo Limpo", "Capão Redondo");
-        grafoView.conectar("Campo Limpo", "Santo Amaro");
-        grafoView.conectar("Campo Limpo", "Interlagos");
-        grafoView.conectar("Santo Amaro", "Interlagos");
-        grafoView.conectar("Capão Redondo", "Interlagos");
+        // Puxa os Bairros, o X e Y deles, e soma as vagas dos hospitais daquele bairro
+        String queryBairros = "SELECT b.nome, b.x_pct, b.y_pct, " +
+                "IFNULL(SUM(h.vagas_totais), 0), IFNULL(SUM(h.vagas_ocupadas), 0) " +
+                "FROM bairros b LEFT JOIN hospitais h ON b.nome = h.nome_bairro " +
+                "GROUP BY b.nome, b.x_pct, b.y_pct";
 
-        bairros.add("Lapa");
-        bairros.add("Perdizes");
-        bairros.add("Vila Madalena");
-        bairros.add("Pinheiros");
-        bairros.add("Alto de Pinheiros");
-        bairros.add("Itaim Bibi");
-        bairros.add("Butantã");
-        bairros.add("Morumbi");
-        bairros.add("Santo Amaro");
-        bairros.add("Campo Limpo");
-        bairros.add("Capão Redondo");
-        bairros.add("Interlagos");
+        Cursor cBairros = db.rawQuery(queryBairros, null);
+        if (cBairros.moveToFirst()) {
+            do {
+                String nome = cBairros.getString(0);
+                float x = cBairros.getFloat(1);
+                float y = cBairros.getFloat(2);
+                int total = cBairros.getInt(3);
+                int ocup = cBairros.getInt(4);
+
+                // Envia pro motor visual e pra lista do Spinner
+                grafoView.adicionarNo(nome, x, y, total, ocup);
+                bairros.add(nome);
+            } while (cBairros.moveToNext());
+        }
+        cBairros.close();
+
+        // Puxa as conexões (Arestas)
+        Cursor cAdj = db.rawQuery("SELECT DISTINCT bairro_origem, bairro_destino FROM adjacencias_grafo WHERE bairro_origem < bairro_destino", null);
+        if (cAdj.moveToFirst()) {
+            do {
+                grafoView.conectar(cAdj.getString(0), cAdj.getString(1));
+            } while (cAdj.moveToNext());
+        }
+        cAdj.close();
+        db.close();
 
         grafoView.setBfsListener(new GrafoView.BfsListener() {
             @Override
             public void onLogLine(String line, int tipo) {
-                runOnUiThread(() -> adicionarLog(line, tipo));
             }
 
             @Override
             public void onResultado(String nome, String bairro, int vagas, int dist, boolean contingencia) {
-                runOnUiThread(() => mostrarResultado(nome, vagas, dist, contingencia));
+                runOnUiThread(() -> mostrarResultado(nome, vagas, dist, contingencia));
             }
         });
     }
