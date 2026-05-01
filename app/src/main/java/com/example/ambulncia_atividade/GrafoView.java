@@ -1,16 +1,25 @@
 package com.example.ambulncia_atividade;
 
-import android.animation.ValueAnimator;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.RectF;
+import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -373,6 +382,102 @@ public class GrafoView extends View {
                 canvas.drawText(palavras[0] + " " + palavras[1], n.x, ly, pTextoLabel);
                 canvas.drawText(palavras[2], n.x, ly + pTextoLabel.getTextSize() + 1, pTextoLabel);
             }
+        }
+    }
+
+    public static class CadastroPacienteActivity extends AppCompatActivity {
+
+        private EditText etNome, etEmail, etSenha, etRg, etSangue, etAlergias;
+        private Button btnCadastrar;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_cadastro_paciente);
+
+            etNome = findViewById(R.id.etCadNome);
+            etEmail = findViewById(R.id.etCadEmail);
+            etSenha = findViewById(R.id.etCadSenha);
+            etRg = findViewById(R.id.etCadRg);
+            etSangue = findViewById(R.id.etCadSangue);
+            etAlergias = findViewById(R.id.etCadAlergias);
+            btnCadastrar = findViewById(R.id.btnFinalizarCadastro);
+
+            btnCadastrar.setOnClickListener(v -> processarCadastro());
+        }
+
+        private void processarCadastro() {
+            String nome = etNome.getText().toString().trim();
+            String email = etEmail.getText().toString().trim();
+            String senha = etSenha.getText().toString().trim();
+            String rg = etRg.getText().toString().trim();
+            String sangue = etSangue.getText().toString().trim();
+            String alergias = etAlergias.getText().toString().trim();
+
+            if (TextUtils.isEmpty(nome) || TextUtils.isEmpty(email) || TextUtils.isEmpty(senha) || TextUtils.isEmpty(rg)) {
+                Toast.makeText(this, "Preencha os campos obrigatórios (Nome, Email, Senha e RG).", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (alergias.isEmpty()) alergias = "Nenhuma";
+
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            try {
+                db.beginTransaction(); // Inicia transação segura para as duas tabelas
+
+                // 1. Cria credencial de Login
+                ContentValues userValues = new ContentValues();
+                userValues.put("email", email);
+                userValues.put("senha_hash", senha);
+                userValues.put("role", "PACIENTE");
+                long userId = db.insert("usuarios", null, userValues);
+
+                if (userId == -1) {
+                    Toast.makeText(this, "E-mail já cadastrado.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // 2. Cria a Ficha Médica amarrada ao Login
+                ContentValues pacienteValues = new ContentValues();
+                pacienteValues.put("id_usuario", userId);
+                pacienteValues.put("nome_completo", nome);
+                pacienteValues.put("rg", rg);
+                pacienteValues.put("tipo_sanguineo", sangue.toUpperCase());
+                pacienteValues.put("alergias", alergias);
+                long pacienteId = db.insert("pacientes", null, pacienteValues);
+
+                if (pacienteId == -1) {
+                    Toast.makeText(this, "RG já cadastrado.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                db.setTransactionSuccessful(); // Tudo certo! Confirma a gravação
+
+                // Salva a sessão e joga direto pro Perfil
+                salvarSessao(email, nome);
+                Intent intent = new Intent(this, PerfilActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+
+            } catch (Exception e) {
+                Toast.makeText(this, "Erro no banco de dados.", Toast.LENGTH_SHORT).show();
+            } finally {
+                db.endTransaction();
+                db.close();
+            }
+        }
+
+        private void salvarSessao(String email, String nome) {
+            SharedPreferences prefs = getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE);
+            prefs.edit()
+                    .putString("email", email)
+                    .putString("perfil", "PACIENTE")
+                    .putString("nome", nome)
+                    .putBoolean("logado", true)
+                    .apply();
         }
     }
 }

@@ -1,81 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  TODO: Extrair as cores HEX para o colors.xml
+  Nota pro Revisor: Layout feito no estilo "linha de lista" para ser injetado
+  dinamicamente dentro do card do bairro. Mantido em LinearLayout pro MVP.
+-->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:paddingVertical="8dp"
     android:gravity="center_vertical"
-    android:paddingVertical="6dp"
-    android:paddingHorizontal="2dp">
+    android:layout_marginBottom="4dp">
 
-    <!-- Indicador de ocupação (barra colorida) -->
+    <!-- Indicador lateral de lotação (Muda de cor no Java) -->
     <View
         android:id="@+id/indicadorOcupacao"
         android:layout_width="4dp"
-        android:layout_height="36dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/verde_ok"/>
+        android:layout_height="32dp"
+        android:layout_marginEnd="12dp"
+        android:background="#4CAF50" />
 
-    <LinearLayout
+    <!-- Nome do Hospital -->
+    <TextView
+        android:id="@+id/tvNomeHospitalItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:orientation="vertical">
+        tools:text="Hospital Metropolitano"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
+    <!-- Estatísticas de Vagas (Direita) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="end">
+
+        <!-- Vagas Livres (Destaque) -->
         <TextView
-            android:id="@+id/tvNomeHospitalItem"
+            android:id="@+id/tvVagasBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hospital"
-            android:textColor="#FFDDDDDD"
-            android:textSize="13sp"/>
+            tools:text="25 vagas"
+            android:textColor="#81C784"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
+        <!-- Fração Ocupados / Total -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="2dp">
 
             <TextView
                 android:id="@+id/tvOcupados"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="#FF888888"
-                android:textSize="11sp"/>
+                tools:text="75"
+                android:textColor="#AAAAAA"
+                android:textSize="11sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" / "
-                android:textColor="#FF555555"
-                android:textSize="11sp"/>
+                android:textColor="#666666"
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/tvTotalItem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0"
-                android:textColor="#FF888888"
-                android:textSize="11sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" leitos"
-                android:textColor="#FF555555"
-                android:textSize="11sp"/>
+                tools:text="100"
+                android:textColor="#666666"
+                android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>
-
-    <!-- Vagas livres badge -->
-    <TextView
-        android:id="@+id/tvVagasBadge"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:gravity="center"
-        android:text="0"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:background="@drawable/bg_badge_vaga"/>
-
 </LinearLayout>

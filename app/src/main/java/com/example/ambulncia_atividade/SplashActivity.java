@@ -21,10 +21,8 @@ public class SplashActivity extends AppCompatActivity {
         });
 
         btnCriarConta.setOnClickListener(v -> {
-            // Futura tela de cadastro — por ora redireciona ao login
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra("modo", "cadastro");
-            startActivity(intent);
+            // Agora o botão chama a tela real de cadastro com a ficha médica
+            startActivity(new Intent(this, CadastroPacienteActivity.class));
         });
     }
 }

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  FIXME: Refatorar esse root para ConstraintLayout na próxima sprint.
+  Linear aninhado funciona pro MVP, mas vai pesar na renderizacao dps.
+  TODO: Extrair as cores HEX para o colors.xml e os textos pro strings.xml
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0d1117"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TRIAGEM MÉDICA"
+        android:textColor="#EF5350"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Buscar Paciente"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp" />
+
+    <EditText
+        android:id="@+id/etBuscaRg"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@drawable/bg_chip_normal"
+        android:hint="Digite o RG do Paciente"
+        android:inputType="number"
+        android:textColorHint="#888888"
+        android:textColor="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnBuscarRg"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="BUSCAR FICHA"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#EF5350"
+        android:textStyle="bold"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btnIrParaMapa"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="ABRIR MAPA / ROTAS"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#EF5350"
+        android:textStyle="bold"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Container do prontuario (Injetado via Java) -->
+    <LinearLayout
+        android:id="@+id/cardFichaPaciente"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_chip_normal"
+        android:padding="20dp"
+        android:visibility="gone"
+        tools:visibility="visible"> <!-- tools:visibility deixa visivel só no preview pra facilitar o design -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PRONTUÁRIO ENCONTRADO"
+            android:textColor="#bfecff"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Uso do tools:text no lugar de android:text para dados dinamicos -->
+        <TextView
+            android:id="@+id/tvNomePacienteTriagem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Paciente: Gabriel Alex"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvSangueTriagem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Sangue: O+"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#3E1A1A"
+            android:padding="12dp"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/alertaAlergia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="⚠️ ALERTA: RESTRIÇÕES MÉDICAS"
+                android:textColor="#EF5350"
+                android:textStyle="bold"
+                android:textSize="12sp"
+                android:layout_marginBottom="4dp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/tvAlergiasTriagem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Alergias: Frutos do mar"
+                android:textColor="#FFCDD2"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

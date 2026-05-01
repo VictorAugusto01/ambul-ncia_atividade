@@ -1,54 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- TODO: Extrair os assets visuais e chaves HEX apos aprovação do MVP -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_dark">
+    android:background="#0d1117"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/vermelho_sos"
+            android:background="#EF5350"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingTop="44dp"
-            android:paddingBottom="16dp"
-            android:paddingHorizontal="16dp">
+            android:padding="16dp"
+            android:gravity="center_vertical">
 
             <Button
                 android:id="@+id/btnVoltarPerfil"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:text="←"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:background="@null"
-                android:padding="0dp"
-                android:layout_marginEnd="10dp"/>
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#D32F2F"
+                android:padding="0dp"/>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🚑"
-                android:textSize="24sp"
-                android:layout_marginEnd="10dp"/>
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
 
-            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="SOS LEITOS" android:textColor="@color/white"
-                    android:textSize="18sp" android:textStyle="bold" android:letterSpacing="0.08"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Meu perfil" android:textColor="#FFDDDDDD" android:textSize="11sp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SOS LEITOS"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Meu perfil"
+                    android:textColor="#FFCDD2"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Avatar + nome -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,130 +59,166 @@
             android:gravity="center"
             android:padding="24dp">
 
+            <!-- Avatar dinamico -->
             <TextView
                 android:id="@+id/tvAvatar"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_chip_normal"
                 android:gravity="center"
-                android:textColor="#FFEF5350"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                android:background="@drawable/bg_avatar"
-                android:layout_marginBottom="12dp"/>
+                tools:text="GA"
+                android:textColor="#EF5350"
+                android:textSize="28sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvPerfilNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Usuário"
-                android:textColor="@color/white"
-                android:textSize="18sp"
+                tools:text="Gabriel Alex"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginTop="12dp"/>
 
             <TextView
                 android:id="@+id/tvPerfilRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🚑 SOCORRISTA · SAMU SP"
-                android:textColor="@color/vermelho_sos"
-                android:textSize="11sp"
-                android:letterSpacing="0.05"/>
+                tools:text="👤 PACIENTE · SAMU SP"
+                android:textColor="#AAAAAA"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Linhas de info -->
+        <!-- View do Paciente -->
         <LinearLayout
+            android:id="@+id/containerFichaPaciente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="20dp">
+            android:paddingHorizontal="24dp"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <!-- E-mail -->
-            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp"
-                android:orientation="horizontal" android:gravity="center_vertical"
-                android:background="@drawable/bg_divider_bottom">
-                <TextView android:layout_width="24dp" android:layout_height="wrap_content"
-                    android:text="✉" android:textSize="16sp" android:layout_marginEnd="12dp"/>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="E-MAIL" android:textColor="#FF555555" android:textSize="9sp" android:letterSpacing="0.08"/>
-                    <TextView android:id="@+id/tvPerfilEmail" android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:text="—"
-                        android:textColor="#FFCCCCCC" android:textSize="12sp"/>
-                </LinearLayout>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="›" android:textColor="#FF333333" android:textSize="18sp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MEU PRONTUÁRIO"
+                android:textColor="#EF5350"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/bg_chip_normal"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvPerfilRg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="RG: 60.333.555-1"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvPerfilSangue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Sangue: O+"
+                    android:textColor="#FFFFFF"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvPerfilAlergias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Alergias: Dipirona"
+                    android:textColor="#FFFFFF"/>
             </LinearLayout>
-
-            <!-- Telefone -->
-            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp"
-                android:orientation="horizontal" android:gravity="center_vertical"
-                android:background="@drawable/bg_divider_bottom">
-                <TextView android:layout_width="24dp" android:layout_height="wrap_content"
-                    android:text="📱" android:textSize="16sp" android:layout_marginEnd="12dp"/>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="TELEFONE" android:textColor="#FF555555" android:textSize="9sp" android:letterSpacing="0.08"/>
-                    <TextView android:id="@+id/tvPerfilTelefone" android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:text="—"
-                        android:textColor="#FFCCCCCC" android:textSize="12sp"/>
-                </LinearLayout>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="›" android:textColor="#FF333333" android:textSize="18sp"/>
-            </LinearLayout>
-
-            <!-- Unidade -->
-            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp"
-                android:orientation="horizontal" android:gravity="center_vertical"
-                android:background="@drawable/bg_divider_bottom">
-                <TextView android:layout_width="24dp" android:layout_height="wrap_content"
-                    android:text="🏢" android:textSize="16sp" android:layout_marginEnd="12dp"/>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="UNIDADE" android:textColor="#FF555555" android:textSize="9sp" android:letterSpacing="0.08"/>
-                    <TextView android:id="@+id/tvPerfilUnidade" android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:text="—"
-                        android:textColor="#FFCCCCCC" android:textSize="12sp"/>
-                </LinearLayout>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="›" android:textColor="#FF333333" android:textSize="18sp"/>
-            </LinearLayout>
-
-            <!-- Atendimentos -->
-            <LinearLayout android:layout_width="match_parent" android:layout_height="52dp"
-                android:orientation="horizontal" android:gravity="center_vertical"
-                android:background="@drawable/bg_divider_bottom">
-                <TextView android:layout_width="24dp" android:layout_height="wrap_content"
-                    android:text="📊" android:textSize="16sp" android:layout_marginEnd="12dp"/>
-                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
-                    android:layout_weight="1" android:orientation="vertical">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="ATENDIMENTOS" android:textColor="#FF555555" android:textSize="9sp" android:letterSpacing="0.08"/>
-                    <TextView android:id="@+id/tvPerfilAtendimentos" android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:text="—"
-                        android:textColor="#FFCCCCCC" android:textSize="12sp"/>
-                </LinearLayout>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="›" android:textColor="#FF333333" android:textSize="18sp"/>
-            </LinearLayout>
-
         </LinearLayout>
 
-        <!-- Botão logout -->
-        <Button
-            android:id="@+id/btnLogout"
+        <!-- View do Socorrista -->
+        <LinearLayout
+            android:id="@+id/containerEstatisticas"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="Sair da conta"
-            android:textColor="#FFEF5350"
-            android:textSize="13sp"
-            android:background="@drawable/bg_botao_logout"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="40dp"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:visibility="gone">
 
+            <TextView
+                android:id="@+id/tvPerfilEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_normal"
+                android:padding="16dp"
+                tools:text="medico@gmail.com"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvPerfilUnidade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_normal"
+                android:padding="16dp"
+                android:text="Base Lapa – Zona Oeste"
+                android:textColor="#FFFFFF"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvPerfilAtendimentos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_normal"
+                android:padding="16dp"
+                android:text="127 atendimentos este mês"
+                android:textColor="#FFFFFF"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/containerHospitaisProximos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HOSPITAIS DISPONÍVEIS"
+                android:textColor="#4CAF50"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <LinearLayout
+                android:id="@+id/listaHospitaisPerfil"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="24dp"
+            android:gravity="bottom">
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="SAIR DA CONTA"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#EF5350"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

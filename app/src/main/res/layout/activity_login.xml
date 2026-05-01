@@ -173,17 +173,19 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/chipAdmin"
+                android:id="@+id/chipPaciente"
                 android:layout_width="0dp"
                 android:layout_height="42dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center"
                 android:background="@drawable/bg_chip_normal">
+
+
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="⚙" android:textSize="14sp" android:layout_marginEnd="5dp"/>
+                    android:text="👤" android:textSize="14sp" android:layout_marginEnd="5dp"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Admin" android:textColor="#FF666666" android:textSize="11sp"/>
+                    android:text="Paciente" android:textColor="#FF666666" android:textSize="11sp"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -235,7 +237,7 @@
 
             <Button
                 android:layout_width="0dp"
-                android:layout_height="44dp"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="G  Google"
                 android:textColor="#FF888888"
@@ -245,7 +247,7 @@
 
             <Button
                 android:layout_width="0dp"
-                android:layout_height="44dp"
+                android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="🏛  Gov.br"
                 android:textColor="#FF888888"

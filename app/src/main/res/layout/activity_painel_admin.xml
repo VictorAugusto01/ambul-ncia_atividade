@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#121212"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🛡️ PAINEL ADMINISTRATIVO"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/tvAdminBemVindo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Olá, Administrador!"
+        android:textColor="#00E5FF"
+        android:textSize="16sp"
+        android:layout_marginBottom="32dp"/>
+
+    <!-- Botões Placeholder de Funcionalidades Futuras -->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="🏥 GERENCIAR HOSPITAIS E VAGAS (Em breve)"
+        android:backgroundTint="#1E1E1E"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="👥 GERENCIAR ACESSOS DE SOCORRISTAS (Em breve)"
+        android:backgroundTint="#1E1E1E"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp"/>
+        
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="📊 AUDITORIA DE ROTAS (Em breve)"
+        android:backgroundTint="#1E1E1E"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Espaçador invisível para empurrar o botão Sair para o final da tela -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/btnSairAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="SAIR DO SISTEMA"
+        android:backgroundTint="#D32F2F"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"/>
+
+</LinearLayout>
