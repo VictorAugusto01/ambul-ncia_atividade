@@ -33,10 +33,10 @@
         <activity android:name=".TriagemActivity" android:exported="false"/>
         <activity android:name=".PainelAdminActivity" android:exported="false"/>
 
-        <!-- 2. A CHAVE FICA AQUI DENTRO! -->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBLqXx6UvaNmvms2MHObaLK8q-y5pS0XLI" />
+            android:value="${MAPS_API_KEY}" />
 
     </application>
 </manifest>
