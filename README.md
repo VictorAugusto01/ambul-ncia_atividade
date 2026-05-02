@@ -1,45 +1,55 @@
-# 🚑 SOS Leitos - Roteamento Inteligente de Ambulâncias (Zona Oeste - SP)
+# 🚑 Sistema de Triagem e Rota de Ambulâncias
 
-Projeto interdisciplinar focado em logística hospitalar de emergência, utilizando **Teoria dos Grafos** para otimizar o encaminhamento de pacientes na Zona Oeste de São Paulo. Desenvolvido para a disciplina de Programação para Dispositivos Móveis.
+Aplicativo Android desenvolvido para auxiliar na triagem médica de pacientes e traçar a rota mais eficiente para a ambulância até o hospital recomendado, utilizando os serviços de mapeamento e roteamento do Google.
 
-## 📌 O Desafio Técnico
-Em situações de emergência, o tempo de resposta é o fator determinante entre a vida e a morte. O problema central que resolvemos foi: **Como garantir que uma ambulância não perca tempo indo para um hospital que já está com o pronto-socorro lotado?**
+## 📱 Funcionalidades
+* **Triagem de Pacientes:** Cadastro e avaliação inicial do estado do paciente.
+* **Visualização no Mapa:** Interface interativa exibindo a localização da ambulância e dos hospitais próximos.
+* **Roteamento Inteligente:** Traçado de rota em tempo real usando a Directions API do Google.
 
-## 🧠 Lógica e Algoritmos
-
-### Modelagem em Grafos
-Modelamos os bairros da Zona Oeste como um **Grafo Não-Direcionado**:
-*   **Nós (Vértices):** Bairros (Lapa, Butantã, Pinheiros, Itaim Bibi, etc.).
-*   **Conexões (Arestas):** As principais vias de acesso e ruas que ligam os bairros adjacentes.
-*   **Atributos Dinâmicos:** Cada nó carrega dados em tempo real (via SQLite local) sobre a capacidade de leitos, vagas ocupadas e alertas médicos.
-
-### Motor de Busca: BFS (Breadth-First Search)
-Implementamos uma adaptação do algoritmo de **Busca em Largura**. A escolha do BFS foi estratégica para a saúde pública: ele nos permite varrer a cidade em "camadas" de distância, garantindo sempre a menor distância em termos de bairros percorridos.
-
-1.  **Nível 0:** O algoritmo verifica primeiro os hospitais no próprio bairro onde a ambulância está.
-2.  **Expansão:** Se todas as unidades locais estiverem lotadas, o motor expande para os vizinhos imediatos (Nível 1) e assim por diante.
-3.  **Contingência:** Caso o sistema atinja o limite de 3 bairros (Nível 3) sem encontrar leitos livres, o algoritmo entra em modo de segurança e seleciona a unidade com a **menor taxa de ocupação percentual** da região, evitando o colapso do atendimento.
-
-## 🚀 Funcionalidades A+
-*   **Integração Real com GPS:** Uso do `FusedLocationProviderClient` para capturar a localização exata do aparelho e traçar a origem da rota dinamicamente no Google Maps.
-*   **Terminal de Log Estético:** Exibição do "passo a passo" do algoritmo BFS na tela, formatado em estilo prompt de comando, permitindo que o socorrista entenda a decisão do sistema.
-*   **Triagem e Prontuário:** Sistema de busca por RG que recupera dados críticos do paciente (alergias graves e tipo sanguíneo) diretamente do banco de dados.
-*   **Histórico de Atendimentos:** Registro persistente de encaminhamentos anteriores para cada paciente.
-*   **Persistência Local:** Banco de Dados SQLite estruturado com relacionamentos entre usuários, pacientes e a topologia do grafo.
-
-## 🛠 Stack Tecnológica
-*   **Linguagem:** Java (Android SDK)
-*   **Mapa:** Google Maps Platform API
-*   **Localização:** Google Play Services Location
-*   **Database:** SQLite Puro (`SQLiteOpenHelper`)
-*   **UI/UX:** XML Layouts com foco em alto contraste para uso em situações de emergência.
-
-## 👥 Squad de Desenvolvimento
-*   Emanuelly
-*   Gabriel Alex
-*   Gustavo Vinicius
-*   Kemilly
-*   Victor Neves
+## 🛠️ Tecnologias Utilizadas
+* **Linguagem:** Java / Kotlin
+* **Plataforma:** Android SDK (mínimo SDK 26)
+* **Ambiente:** Android Studio
+* **APIs Integradas:**
+    * Maps SDK for Android
+    * Directions API
 
 ---
-*Maio de 2026 - Projeto Acadêmico para PDM*
+
+## 🚀 Como rodar o projeto localmente
+
+Como este projeto utiliza a API do Google Maps para traçar rotas e exibir localizações, você precisará configurar uma chave de API própria para que o mapa funcione corretamente. O repositório foi configurado usando as melhores práticas para manter as credenciais seguras.
+
+**1. Clone o repositório:**
+```bash
+git clone [https://github.com/VictorAugusto01/ambul-ncia_atividade.git](https://github.com/VictorAugusto01/ambul-ncia_atividade.git)
+```
+
+**2. Obtenha a chave da API do Google:**
+* Acesse o [Google Cloud Console](https://console.cloud.google.com/).
+* Crie um projeto e certifique-se de ativar as seguintes APIs: **Maps SDK for Android** e **Directions API**.
+* Gere uma credencial (API Key).
+
+**3. Configure a chave no projeto:**
+* Abra o projeto clonado no Android Studio.
+* Na raiz do projeto, procure pelo arquivo `local.properties` (dentro da visão *Project* ou *Gradle Scripts*). Se ele não existir, você pode criá-lo.
+* Adicione a seguinte linha na parte inferior do arquivo, colando a sua chave sem aspas:
+```properties
+MAPS_API_KEY=sua_chave_de_api_gerada_aqui
+```
+
+**4. Sincronize e Execute:**
+* Clique no botão **"Sync Project with Gradle Files"** (ícone de elefante com setinha) na barra superior do Android Studio.
+* Dê o Play (Run) para testar no emulador ou no seu dispositivo físico.
+
+---
+
+## 👥 Squad de Desenvolvimento
+Projeto desenvolvido em equipe para fins acadêmicos e construção de portfólio.
+
+* **Emanuelly**
+* **Gabriel Alex**
+* **Gustavo Vinicius**
+* **Kemilly**
+* **Victor Neves**
