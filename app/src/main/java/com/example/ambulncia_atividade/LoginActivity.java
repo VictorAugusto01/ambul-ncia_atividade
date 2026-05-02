@@ -1,5 +1,6 @@
 package com.example.ambulncia_atividade;
 
+import com.example.ambulncia_atividade.domain.security.PasswordHelper;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -99,9 +100,12 @@ public class LoginActivity extends AppCompatActivity {
 
         try {
             ContentValues userValues = new ContentValues();
+            String saltAleatorio = PasswordHelper.generateSalt();
+            String senhaHasheada = PasswordHelper.hashPassword(senha, saltAleatorio);
+
             userValues.put("email", email);
-            userValues.put("senha_hash", senha); // fixme dps
-            userValues.put("salt", "default");
+            userValues.put("senha_hash", senhaHasheada);
+            userValues.put("salt", saltAleatorio);
             userValues.put("role", perfilSelecionado);
 
             long userId = db.insert("usuarios", null, userValues);
@@ -138,14 +142,23 @@ public class LoginActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        Cursor cursor = db.rawQuery("SELECT role, id FROM usuarios WHERE email = ? AND senha_hash = ?", new String[]{email, senha});
+        // Busca apenas pelo e-mail para resgatar o Sal e o Hash
+        Cursor cursor = db.rawQuery("SELECT role, senha_hash, salt FROM usuarios WHERE email = ?", new String[]{email});
 
         if (cursor.moveToFirst()) {
             String roleBanco = cursor.getString(0);
-            salvarPrefs(email, roleBanco);
-            rotearApp(roleBanco);
+            String hashBanco = cursor.getString(1);
+            String saltBanco = cursor.getString(2);
+
+            // Valida a senha digitada contra o Hash+Salt salvo
+            if (PasswordHelper.checkPassword(senha, hashBanco, saltBanco)) {
+                salvarPrefs(email, roleBanco);
+                rotearApp(roleBanco);
+            } else {
+                Toast.makeText(this, "Senha incorreta.", Toast.LENGTH_LONG).show();
+            }
         } else {
-            Toast.makeText(this, "Credenciais não bateram.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_LONG).show();
         }
 
         cursor.close();

@@ -1,5 +1,6 @@
 package com.example.ambulncia_atividade;
 
+import com.example.ambulncia_atividade.domain.security.PasswordHelper;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
+
 
 public class CadastroPacienteActivity extends AppCompatActivity {
 
@@ -56,9 +58,14 @@ public class CadastroPacienteActivity extends AppCompatActivity {
         try {
             db.beginTransaction(); // trava a transacao pq sao 2 inserts casados
 
+            // Gera o salt e o hash antes de salvar
+            String saltAleatorio = PasswordHelper.generateSalt();
+            String senhaHasheada = PasswordHelper.hashPassword(senha, saltAleatorio);
+
             ContentValues userValues = new ContentValues();
             userValues.put("email", email);
-            userValues.put("senha_hash", senha); // TODO: urgete aplicar Bcrypt aqui
+            userValues.put("senha_hash", senhaHasheada);
+            userValues.put("salt", saltAleatorio);
             userValues.put("role", "PACIENTE");
             long userId = db.insert("usuarios", null, userValues);
 
