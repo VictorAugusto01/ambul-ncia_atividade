@@ -1,38 +1,45 @@
-# SOS Leitos - Roteamento Inteligente de Ambulâncias
+# 🚑 SOS Leitos - Roteamento Inteligente de Ambulâncias (Zona Oeste - SP)
 
-Projeto interdisciplinar desenvolvido para a disciplina de Programação para Dispositivos Móveis, aplicando Teoria dos Grafos para resolver um problema de logística e saúde pública: o roteamento eficiente de ambulâncias em situações de emergência.
+Projeto interdisciplinar focado em logística hospitalar de emergência, utilizando **Teoria dos Grafos** para otimizar o encaminhamento de pacientes na Zona Oeste de São Paulo. Desenvolvido para a disciplina de Programação para Dispositivos Móveis.
 
-## O Problema
-Quando uma ambulância está com um paciente na zona oeste de São Paulo, o tempo é crítico. O sistema precisa encontrar o hospital ou UPA mais próximo que tenha vagas disponíveis, evitando deslocamentos desnecessários para unidades superlotadas.
+## 📌 O Desafio Técnico
+Em situações de emergência, o tempo de resposta é o fator determinante entre a vida e a morte. O problema central que resolvemos foi: **Como garantir que uma ambulância não perca tempo indo para um hospital que já está com o pronto-socorro lotado?**
 
-## Nossa Solução 
-Para resolver isso de forma otimizada, modelamos a cidade como um Grafo Não Direcionado:
-- Vértices (Nós): Os bairros.
-- Arestas (Conexões): As vias que ligam os bairros adjacentes.
-- Atributos: Cada bairro possui uma lista de hospitais, com suas respectivas capacidades totais e leitos ocupados.
+## 🧠 Lógica e Algoritmos
 
-O coração do aplicativo roda um algoritmo de Busca em Largura (BFS - Breadth-First Search). Escolhemos o BFS porque ele nos permite analisar as opções em "níveis de distância", garantindo que a ambulância procure as vagas progressivamente do bairro atual para os vizinhos mais distantes.
+### Modelagem em Grafos
+Modelamos os bairros da Zona Oeste como um **Grafo Não-Direcionado**:
+*   **Nós (Vértices):** Bairros (Lapa, Butantã, Pinheiros, Itaim Bibi, etc.).
+*   **Conexões (Arestas):** As principais vias de acesso e ruas que ligam os bairros adjacentes.
+*   **Atributos Dinâmicos:** Cada nó carrega dados em tempo real (via SQLite local) sobre a capacidade de leitos, vagas ocupadas e alertas médicos.
 
-### Regras de Negócio:
-1. Prioridade Local: Busca vaga primeiro no bairro onde a ambulância está. Se houver mais de um hospital com vaga, escolhe o que tem o maior número de leitos livres.
-2. Expansão Adjacente: Se não achar, expande a busca para os vizinhos imediatos (Nível 1), seguindo a regra de priorizar quem tem mais vagas.
-3. Limite de Deslocamento: O algoritmo trava a busca em um limite máximo de 3 bairros de distância.
-4. Plano de Contingência: Se rodar os 3 níveis de distância e nenhum hospital tiver vaga livre, o algoritmo encaminha a ambulância para o hospital menos sobrecarregado (menor taxa de ocupação %) entre todos os analisados na região.
+### Motor de Busca: BFS (Breadth-First Search)
+Implementamos uma adaptação do algoritmo de **Busca em Largura**. A escolha do BFS foi estratégica para a saúde pública: ele nos permite varrer a cidade em "camadas" de distância, garantindo sempre a menor distância em termos de bairros percorridos.
 
-## Stack Tecnológica
+1.  **Nível 0:** O algoritmo verifica primeiro os hospitais no próprio bairro onde a ambulância está.
+2.  **Expansão:** Se todas as unidades locais estiverem lotadas, o motor expande para os vizinhos imediatos (Nível 1) e assim por diante.
+3.  **Contingência:** Caso o sistema atinja o limite de 3 bairros (Nível 3) sem encontrar leitos livres, o algoritmo entra em modo de segurança e seleciona a unidade com a **menor taxa de ocupação percentual** da região, evitando o colapso do atendimento.
 
-* Linguagem: Java
-* Plataforma: Android SDK
-* Estrutura de Dados: Collections (HashMap, Queue, Set) para manipulação do grafo em memória.
-* Persistência: Banco de Dados SQLite (Planejado)
+## 🚀 Funcionalidades A+
+*   **Integração Real com GPS:** Uso do `FusedLocationProviderClient` para capturar a localização exata do aparelho e traçar a origem da rota dinamicamente no Google Maps.
+*   **Terminal de Log Estético:** Exibição do "passo a passo" do algoritmo BFS na tela, formatado em estilo prompt de comando, permitindo que o socorrista entenda a decisão do sistema.
+*   **Triagem e Prontuário:** Sistema de busca por RG que recupera dados críticos do paciente (alergias graves e tipo sanguíneo) diretamente do banco de dados.
+*   **Histórico de Atendimentos:** Registro persistente de encaminhamentos anteriores para cada paciente.
+*   **Persistência Local:** Banco de Dados SQLite estruturado com relacionamentos entre usuários, pacientes e a topologia do grafo.
 
-## Membros da Equipe
+## 🛠 Stack Tecnológica
+*   **Linguagem:** Java (Android SDK)
+*   **Mapa:** Google Maps Platform API
+*   **Localização:** Google Play Services Location
+*   **Database:** SQLite Puro (`SQLiteOpenHelper`)
+*   **UI/UX:** XML Layouts com foco em alto contraste para uso em situações de emergência.
 
-* Emanuelly
-* Gabriel Alex
-* Gustavo Vinicius
-* Kemilly
-* Victor Neves
+## 👥 Squad de Desenvolvimento
+*   Emanuelly
+*   Gabriel Alex
+*   Gustavo Vinicius
+*   Kemilly
+*   Victor Neves
 
 ---
-Projeto acadêmico - 2026.
+*Maio de 2026 - Projeto Acadêmico para PDM*
