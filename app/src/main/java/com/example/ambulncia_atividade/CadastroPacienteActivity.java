@@ -1,5 +1,6 @@
 package com.example.ambulncia_atividade;
 
+import com.example.ambulncia_atividade.domain.security.SessionManager;
 import com.example.ambulncia_atividade.domain.security.PasswordHelper;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -105,7 +106,7 @@ public class CadastroPacienteActivity extends AppCompatActivity {
     }
 
     private void salvarSessaoLocal(String email, String nome) {
-        SharedPreferences prefs = getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE);
+        SharedPreferences prefs = SessionManager.getSecurePrefs(this);
         prefs.edit()
                 .putString("email", email)
                 .putString("perfil", "PACIENTE")

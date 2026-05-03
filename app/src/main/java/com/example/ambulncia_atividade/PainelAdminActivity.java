@@ -1,5 +1,6 @@
 package com.example.ambulncia_atividade;
 
+import com.example.ambulncia_atividade.domain.security.SessionManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,7 +17,7 @@ public class PainelAdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_painel_admin);
 
         // Resgata os dados da sessão salva no Login
-        SharedPreferences prefs = getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE);
+        SharedPreferences prefs = SessionManager.getSecurePrefs(this);
         String nome = prefs.getString("nome", "Administrador");
 
         // Atualiza a interface com o nome do admin

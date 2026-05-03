@@ -1,5 +1,7 @@
 package com.example.ambulncia_atividade;
 
+
+import com.example.ambulncia_atividade.domain.security.SessionManager;
 import com.example.ambulncia_atividade.domain.security.PasswordHelper;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -166,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void salvarPrefs(String email, String role) {
-        getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE).edit()
+        SessionManager.getSecurePrefs(this).edit()
                 .putString("email", email)
                 .putString("perfil", role)
                 .putString("nome", extrairNome(email))

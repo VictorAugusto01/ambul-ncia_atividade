@@ -1,5 +1,6 @@
 package com.example.ambulncia_atividade;
 
+import com.example.ambulncia_atividade.domain.security.SessionManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -24,7 +25,7 @@ public class PerfilActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
 
-        SharedPreferences sf = getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE);
+        SharedPreferences sf = SessionManager.getSecurePrefs(this);
         nameUser = sf.getString("nome", "User");
         mailUser = sf.getString("email", "-");
         perfUser = sf.getString("perfil", "Socorrista");
