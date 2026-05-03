@@ -1,5 +1,7 @@
 package com.example.ambulncia_atividade.domain.database;
 
+import net.zetetic.database.sqlcipher.SupportOpenHelperFactory;
+import com.example.ambulncia_atividade.domain.security.SessionManager;
 import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -33,10 +35,18 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
+                    // Resgata a chave do cofre
+                    byte[] passphrase = SessionManager.getDatabasePassphrase(context);
+
+                    // Cria o motor de criptografia
+                    SupportOpenHelperFactory factory = new SupportOpenHelperFactory(passphrase);
+
+                    // Constrói o Room usando o motor
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "sos_leitos_room.db")
                             .allowMainThreadQueries()
-                            .addCallback(roomCallback) // Adicionando o gatilho de população
+                            .openHelperFactory(factory) // <-- A mágica da blindagem
+                            .addCallback(roomCallback)
                             .build();
                 }
             }
