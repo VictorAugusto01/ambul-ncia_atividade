@@ -13,9 +13,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
+import com.example.ambulncia_atividade.domain.database.AppDatabase;
+import com.example.ambulncia_atividade.domain.database.entity.AdjacenciaGrafo;
+import com.example.ambulncia_atividade.domain.database.entity.Bairro;
+import com.example.ambulncia_atividade.domain.database.entity.Hospital;
 
 import com.example.ambulncia_atividade.domain.AmbulanciaAtendimento;
 
@@ -88,57 +89,46 @@ public class MainActivity extends AppCompatActivity {
      * String[] = { nome, total, ocupados }
      */
     private void inicializarDados() {
-        // 1. Instancia o sistema passando o contexto da Activity (necessário para o SQLite)
+        // Mantém a instância do backend
         sistema = new AmbulanciaAtendimento(this);
 
-        // 2. Abre a ligação com a Base de Dados em modo de leitura
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        AppDatabase db = AppDatabase.getInstance(this);
 
-        // 3. Limpa os mapas para evitar duplicidade caso o método seja chamado novamente
         dadosGrafo.clear();
         dadosHospitais.clear();
 
-        // 4. Carrega os Bairros para o Spinner e para a estrutura da UI
-        Cursor cBairros = db.rawQuery("SELECT nome FROM bairros", null);
-        if (cBairros.moveToFirst()) {
-            do {
-                String b = cBairros.getString(0);
-                dadosGrafo.put(b, new ArrayList<>());
-                dadosHospitais.put(b, new ArrayList<>());
-            } while (cBairros.moveToNext());
+        // Carrega os Bairros
+        List<Bairro> bairros = db.grafoDao().getTodosBairros();
+        if (bairros != null) {
+            for (Bairro b : bairros) {
+                dadosGrafo.put(b.nome, new ArrayList<>());
+                dadosHospitais.put(b.nome, new ArrayList<>());
+            }
         }
-        cBairros.close();
 
-        // 5. Carrega as Conexões (Adjacências) do grafo para a interface
-        Cursor cAdj = db.rawQuery("SELECT bairro_origem, bairro_destino FROM adjacencias_grafo", null);
-        if (cAdj.moveToFirst()) {
-            do {
-                String origem = cAdj.getString(0);
-                String destino = cAdj.getString(1);
-                if (dadosGrafo.containsKey(origem)) {
-                    dadosGrafo.get(origem).add(destino);
+        // Carrega as Conexões
+        List<AdjacenciaGrafo> adjacencias = db.grafoDao().getTodasAdjacencias();
+        if (adjacencias != null) {
+            for (AdjacenciaGrafo a : adjacencias) {
+                if (dadosGrafo.containsKey(a.bairroOrigem)) {
+                    dadosGrafo.get(a.bairroOrigem).add(a.bairroDestino);
                 }
-            } while (cAdj.moveToNext());
+            }
         }
-        cAdj.close();
 
-        // 6. Carrega os Hospitais para os cards da interface (Nome, Bairro, Total e Ocupados)
-        Cursor cHosp = db.rawQuery("SELECT nome, nome_bairro, vagas_totais, vagas_ocupadas FROM hospitais", null);
-        if (cHosp.moveToFirst()) {
-            do {
-                String nome = cHosp.getString(0);
-                String bairro = cHosp.getString(1);
-                String total = String.valueOf(cHosp.getInt(2));
-                String ocupados = String.valueOf(cHosp.getInt(3));
-
-                if (dadosHospitais.containsKey(bairro)) {
-                    dadosHospitais.get(bairro).add(new String[]{nome, total, ocupados});
+        // Carrega os Hospitais
+        List<Hospital> hospitais = db.grafoDao().getTodosHospitais();
+        if (hospitais != null) {
+            for (Hospital h : hospitais) {
+                if (dadosHospitais.containsKey(h.nomeBairro)) {
+                    dadosHospitais.get(h.nomeBairro).add(new String[]{
+                            h.nome,
+                            String.valueOf(h.vagasTotais),
+                            String.valueOf(h.vagasOcupadas)
+                    });
                 }
-            } while (cHosp.moveToNext());
+            }
         }
-        cHosp.close();
-        db.close(); // Fecha a conexão para liberar memória
     }
 
     // =========================================================

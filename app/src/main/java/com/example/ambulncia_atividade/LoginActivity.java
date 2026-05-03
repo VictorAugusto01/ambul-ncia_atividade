@@ -3,11 +3,11 @@ package com.example.ambulncia_atividade;
 
 import com.example.ambulncia_atividade.domain.security.SessionManager;
 import com.example.ambulncia_atividade.domain.security.PasswordHelper;
-import android.content.ContentValues;
+import com.example.ambulncia_atividade.domain.database.AppDatabase;
+import com.example.ambulncia_atividade.domain.database.entity.Paciente;
+import com.example.ambulncia_atividade.domain.database.entity.Usuario;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,7 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -97,41 +96,37 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        AppDatabase db = AppDatabase.getInstance(this);
 
         try {
-            ContentValues userValues = new ContentValues();
             String saltAleatorio = PasswordHelper.generateSalt();
             String senhaHasheada = PasswordHelper.hashPassword(senha, saltAleatorio);
 
-            userValues.put("email", email);
-            userValues.put("senha_hash", senhaHasheada);
-            userValues.put("salt", saltAleatorio);
-            userValues.put("role", perfilSelecionado);
+            Usuario novoUser = new Usuario();
+            novoUser.email = email;
+            novoUser.senhaHash = senhaHasheada;
+            novoUser.salt = saltAleatorio;
+            novoUser.role = perfilSelecionado;
 
-            long userId = db.insert("usuarios", null, userValues);
+            long userId = db.usuarioDao().inserir(novoUser);
+
             if (userId == -1) {
                 Toast.makeText(this, "E-mail já existe.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // workaround provisorio: enfia o cara na tabela pacientes com um RG gerado pra n estourar FK
             if (perfilSelecionado.equals("PACIENTE")) {
-                ContentValues pValues = new ContentValues();
-                pValues.put("id_usuario", userId);
-                pValues.put("nome_completo", extrairNome(email));
-                pValues.put("rg", "PENDENTE-" + userId);
-                db.insert("pacientes", null, pValues);
+                Paciente novoPac = new Paciente();
+                novoPac.idUsuario = (int) userId;
+                novoPac.nomeCompleto = extrairNome(email);
+                novoPac.rg = "PENDENTE-" + userId;
+                db.pacienteDao().inserir(novoPac);
             }
 
             Toast.makeText(this, "Criado com sucesso! Pode logar.", Toast.LENGTH_SHORT).show();
-            finish();
 
         } catch (Exception e) {
-            Toast.makeText(this, "Erro fatal", Toast.LENGTH_SHORT).show();
-        } finally {
-            db.close();
+            Toast.makeText(this, "Erro fatal no banco.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -141,30 +136,21 @@ public class LoginActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(senha)) return;
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        AppDatabase db = AppDatabase.getInstance(this);
 
-        // Busca apenas pelo e-mail para resgatar o Sal e o Hash
-        Cursor cursor = db.rawQuery("SELECT role, senha_hash, salt FROM usuarios WHERE email = ?", new String[]{email});
+        Usuario userBanco = db.usuarioDao().getUsuarioPorEmail(email);
 
-        if (cursor.moveToFirst()) {
-            String roleBanco = cursor.getString(0);
-            String hashBanco = cursor.getString(1);
-            String saltBanco = cursor.getString(2);
-
-            // Valida a senha digitada contra o Hash+Salt salvo
-            if (PasswordHelper.checkPassword(senha, hashBanco, saltBanco)) {
-                salvarPrefs(email, roleBanco);
-                rotearApp(roleBanco);
+        if (userBanco != null) {
+            // Valida a senha digitada contra o Hash+Salt salvo no objeto
+            if (PasswordHelper.checkPassword(senha, userBanco.senhaHash, userBanco.salt)) {
+                salvarPrefs(email, userBanco.role);
+                rotearApp(userBanco.role);
             } else {
                 Toast.makeText(this, "Senha incorreta.", Toast.LENGTH_LONG).show();
             }
         } else {
             Toast.makeText(this, "Usuário não encontrado.", Toast.LENGTH_LONG).show();
         }
-
-        cursor.close();
-        db.close();
     }
 
     private void salvarPrefs(String email, String role) {

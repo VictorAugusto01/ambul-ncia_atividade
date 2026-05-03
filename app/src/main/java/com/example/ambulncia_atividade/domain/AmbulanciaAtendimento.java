@@ -1,10 +1,8 @@
 package com.example.ambulncia_atividade.domain;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
+import com.example.ambulncia_atividade.domain.database.AppDatabase;
+import com.example.ambulncia_atividade.domain.database.entity.Hospital;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -15,70 +13,11 @@ public class AmbulanciaAtendimento {
 
     private static final int MAX_DISTANCIA = 3;
 
-    // Ponte de ligação para a base de dados
-    private DatabaseHelper dbHelper;
+    // Ponte de ligação para a base de dados via Room
+    private final AppDatabase db;
 
-    // Construtor: Agora a classe precisa do "Context" (a MainActivity) para poder abrir a base de dados
     public AmbulanciaAtendimento(Context context) {
-        this.dbHelper = new DatabaseHelper(context);
-    }
-
-    public static class Hospital {
-        public String nome;
-        public String bairro;
-        public int total;
-        public int ocupados;
-
-        public Hospital(String nome, String bairro, int total, int ocupados) {
-            this.nome = nome;
-            this.bairro = bairro;
-            this.total = total;
-            this.ocupados = ocupados;
-        }
-
-        public int vagasLivres() {
-            return total - ocupados;
-        }
-
-        public double taxaOcupacao() {
-            if (total == 0) return 1.0;
-            return (double) ocupados / total;
-        }
-    }
-
-    // Descobrir quem são os vizinhos de um bairro
-    private List<String> obterVizinhos(String bairroOrigem) {
-        List<String> vizinhos = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT bairro_destino FROM adjacencias_grafo WHERE bairro_origem = ?", new String[]{bairroOrigem});
-
-        if (cursor.moveToFirst()) {
-            do {
-                vizinhos.add(cursor.getString(0));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return vizinhos;
-    }
-
-    // Descobrir os hospitais que existem dentro de um bairro
-    private List<Hospital> obterHospitaisDoBairro(String bairro) {
-        List<Hospital> hospitais = new ArrayList<>();
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        Cursor cursor = db.rawQuery("SELECT nome, vagas_totais, vagas_ocupadas FROM hospitais WHERE nome_bairro = ?", new String[]{bairro});
-
-        if (cursor.moveToFirst()) {
-            do {
-                String nome = cursor.getString(0);
-                int vagasTotais = cursor.getInt(1);
-                int vagasOcupadas = cursor.getInt(2);
-                hospitais.add(new Hospital(nome, bairro, vagasTotais, vagasOcupadas));
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        return hospitais;
+        this.db = AppDatabase.getInstance(context);
     }
 
     public String encontrarHospital(String bairroOrigem) {
@@ -98,28 +37,33 @@ public class AmbulanciaAtendimento {
             for (int i = 0; i < tamanhoNivel; i++) {
                 String bairroAtual = fila.poll();
 
-                // Vai à Base de Dados procurar os hospitais deste bairro
-                List<Hospital> hospitaisNoBairro = obterHospitaisDoBairro(bairroAtual);
+                // Busca direta via DAO
+                List<Hospital> hospitaisNoBairro = db.grafoDao().getHospitaisDoBairro(bairroAtual);
                 todosAnalisados.addAll(hospitaisNoBairro);
 
                 Hospital melhorDoBairro = null;
 
                 for (Hospital h : hospitaisNoBairro) {
-                    if (h.vagasLivres() > 0) {
-                        if (melhorDoBairro == null || h.vagasLivres() > melhorDoBairro.vagasLivres()) {
+                    int vagasLivres = h.vagasTotais - h.vagasOcupadas;
+                    if (vagasLivres > 0) {
+                        int livresMelhor = melhorDoBairro == null ? -1 : (melhorDoBairro.vagasTotais - melhorDoBairro.vagasOcupadas);
+                        if (melhorDoBairro == null || vagasLivres > livresMelhor) {
                             melhorDoBairro = h;
                         }
                     }
                 }
 
                 if (melhorDoBairro != null) {
-                    if (hospitalEscolhido == null || melhorDoBairro.vagasLivres() > hospitalEscolhido.vagasLivres()) {
+                    int livresMelhor = melhorDoBairro.vagasTotais - melhorDoBairro.vagasOcupadas;
+                    int livresEscolhido = hospitalEscolhido == null ? -1 : (hospitalEscolhido.vagasTotais - hospitalEscolhido.vagasOcupadas);
+
+                    if (hospitalEscolhido == null || livresMelhor > livresEscolhido) {
                         hospitalEscolhido = melhorDoBairro;
                     }
                 }
 
-                // Vai à Base de Dados procurar os vizinhos para continuar a expansão (Arestas do Grafo)
-                List<String> vizinhos = obterVizinhos(bairroAtual);
+                // Busca de arestas via DAO
+                List<String> vizinhos = db.grafoDao().getVizinhos(bairroAtual);
                 for (String vizinho : vizinhos) {
                     if (!visitados.contains(vizinho)) {
                         visitados.add(vizinho);
@@ -137,7 +81,11 @@ public class AmbulanciaAtendimento {
         // Plano de Contingência (Menos Lotado)
         Hospital menosLotado = null;
         for (Hospital h : todosAnalisados) {
-            if (menosLotado == null || h.taxaOcupacao() < menosLotado.taxaOcupacao()) {
+            double taxa = h.vagasTotais == 0 ? 1.0 : (double) h.vagasOcupadas / h.vagasTotais;
+            double taxaMenosLotado = menosLotado == null ? 2.0 :
+                    (menosLotado.vagasTotais == 0 ? 1.0 : (double) menosLotado.vagasOcupadas / menosLotado.vagasTotais);
+
+            if (menosLotado == null || taxa < taxaMenosLotado) {
                 menosLotado = h;
             }
         }

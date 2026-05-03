@@ -2,17 +2,17 @@ package com.example.ambulncia_atividade;
 
 import com.example.ambulncia_atividade.domain.security.SessionManager;
 import com.example.ambulncia_atividade.domain.security.PasswordHelper;
-import android.content.ContentValues;
+import com.example.ambulncia_atividade.domain.database.AppDatabase;
+import com.example.ambulncia_atividade.domain.database.entity.Paciente;
+import com.example.ambulncia_atividade.domain.database.entity.Usuario;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
 
 public class CadastroPacienteActivity extends AppCompatActivity {
@@ -53,42 +53,42 @@ public class CadastroPacienteActivity extends AppCompatActivity {
         // se o cara n botar alergia, joga padrao senao da nullpointer no card de triagem
         if (alergias.isEmpty()) alergias = "Nenhuma";
 
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        AppDatabase db = AppDatabase.getInstance(this);
 
         try {
-            db.beginTransaction(); // trava a transacao pq sao 2 inserts casados
+            db.beginTransaction(); // O Room suporta a mesma estrutura de transação
 
-            // Gera o salt e o hash antes de salvar
             String saltAleatorio = PasswordHelper.generateSalt();
             String senhaHasheada = PasswordHelper.hashPassword(senha, saltAleatorio);
 
-            ContentValues userValues = new ContentValues();
-            userValues.put("email", email);
-            userValues.put("senha_hash", senhaHasheada);
-            userValues.put("salt", saltAleatorio);
-            userValues.put("role", "PACIENTE");
-            long userId = db.insert("usuarios", null, userValues);
+            Usuario novoUser = new Usuario();
+            novoUser.email = email;
+            novoUser.senhaHash = senhaHasheada;
+            novoUser.salt = saltAleatorio;
+            novoUser.role = "PACIENTE";
+
+            long userId = db.usuarioDao().inserir(novoUser);
 
             if (userId == -1) {
                 Toast.makeText(this, "E-mail já cadastrado.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            ContentValues pacienteValues = new ContentValues();
-            pacienteValues.put("id_usuario", userId);
-            pacienteValues.put("nome_completo", nome);
-            pacienteValues.put("rg", rg);
-            pacienteValues.put("tipo_sanguineo", sangue.toUpperCase());
-            pacienteValues.put("alergias", alergias);
-            long pacienteId = db.insert("pacientes", null, pacienteValues);
+            Paciente novoPac = new Paciente();
+            novoPac.idUsuario = (int) userId;
+            novoPac.nomeCompleto = nome;
+            novoPac.rg = rg;
+            novoPac.tipoSanguineo = sangue.toUpperCase();
+            novoPac.alergias = alergias;
+
+            long pacienteId = db.pacienteDao().inserir(novoPac);
 
             if (pacienteId == -1) {
                 Toast.makeText(this, "RG já cadastrado.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            db.setTransactionSuccessful(); // sucesso, comita as duas
+            db.setTransactionSuccessful();
 
             salvarSessaoLocal(email, nome);
             Intent intent = new Intent(this, PerfilActivity.class);
@@ -97,11 +97,9 @@ public class CadastroPacienteActivity extends AppCompatActivity {
             finish();
 
         } catch (Exception e) {
-            // Log.e("CADASTRO_ERRO", "falhou no insert: ", e);
             Toast.makeText(this, "Erro interno no banco.", Toast.LENGTH_SHORT).show();
         } finally {
             db.endTransaction();
-            db.close();
         }
     }
 

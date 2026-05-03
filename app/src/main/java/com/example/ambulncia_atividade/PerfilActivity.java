@@ -1,10 +1,12 @@
 package com.example.ambulncia_atividade;
 
 import com.example.ambulncia_atividade.domain.security.SessionManager;
+import com.example.ambulncia_atividade.domain.database.AppDatabase;
+import com.example.ambulncia_atividade.domain.database.entity.Hospital;
+import com.example.ambulncia_atividade.domain.database.entity.Paciente;
+import java.util.List;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -12,7 +14,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
 public class PerfilActivity extends AppCompatActivity {
 
@@ -74,36 +75,32 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void puxarFichaDB() {
-        DatabaseHelper dh = new DatabaseHelper(this);
-        SQLiteDatabase db = dh.getReadableDatabase();
+        AppDatabase db = AppDatabase.getInstance(this);
+        Paciente paciente = db.pacienteDao().getPacientePorEmail(mailUser);
 
-        // inner join brabo pra nao precisar salvar o RG na shared prefs
-        String sql = "SELECT p.rg, p.tipo_sanguineo, p.alergias FROM pacientes p INNER JOIN usuarios u ON p.id_usuario = u.id WHERE u.email = ?";
-        Cursor c = db.rawQuery(sql, new String[]{mailUser});
-
-        if (c.moveToFirst()) {
-            txtRg.setText("RG: " + c.getString(0));
-            txtSangue.setText("Tipagem: " + c.getString(1));
-            String al = c.getString(2);
+        if (paciente != null) {
+            txtRg.setText("RG: " + paciente.rg);
+            txtSangue.setText("Tipagem: " + paciente.tipoSanguineo);
+            String al = paciente.alergias;
             txtAlergia.setText("Alergias: " + al);
-            if (!al.equalsIgnoreCase("Nenhuma")) txtAlergia.setTextColor(Color.parseColor("#EF5350"));
+
+            if (al != null && !al.equalsIgnoreCase("Nenhuma")) {
+                txtAlergia.setTextColor(Color.parseColor("#EF5350"));
+            }
         }
-        c.close();
-        db.close();
     }
 
     private void puxarVagasLivresDB() {
-        DatabaseHelper dh = new DatabaseHelper(this);
-        SQLiteDatabase db = dh.getReadableDatabase();
+        AppDatabase db = AppDatabase.getInstance(this);
+        List<Hospital> hospitais = db.grafoDao().getHospitaisComVagas();
 
-        // limit 3 senao explode a tela do celular do cara
-        Cursor c = db.rawQuery("SELECT nome, nome_bairro, (vagas_totais - vagas_ocupadas) as l FROM hospitais WHERE l > 0 LIMIT 3", null);
         listHospViews.removeAllViews();
 
-        if (c.moveToFirst()) {
-            do {
+        if (hospitais != null && !hospitais.isEmpty()) {
+            for (Hospital h : hospitais) {
                 TextView item = new TextView(this);
-                item.setText(c.getString(0) + " (" + c.getString(1) + ")\n" + c.getInt(2) + " vagas abertas");
+                int vagasLivres = h.vagasTotais - h.vagasOcupadas;
+                item.setText(h.nome + " (" + h.nomeBairro + ")\n" + vagasLivres + " vagas abertas");
                 item.setTextColor(Color.parseColor("#81C784"));
                 item.setBackgroundResource(R.drawable.bg_chip_normal);
                 item.setPadding(32, 24, 32, 24);
@@ -112,15 +109,13 @@ public class PerfilActivity extends AppCompatActivity {
                 lp.setMargins(0, 0, 0, 16);
                 item.setLayoutParams(lp);
                 listHospViews.addView(item);
-            } while (c.moveToNext());
+            }
         } else {
             TextView v = new TextView(this);
             v.setText("Sistema em alerta vermelho. 0 vagas.");
             v.setTextColor(Color.parseColor("#AAAAAA"));
             listHospViews.addView(v);
         }
-        c.close();
-        db.close();
     }
 
     private void fazerLogout(SharedPreferences prefs) {

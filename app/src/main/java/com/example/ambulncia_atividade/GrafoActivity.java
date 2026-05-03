@@ -2,8 +2,6 @@ package com.example.ambulncia_atividade;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -20,7 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
+import com.example.ambulncia_atividade.domain.database.AppDatabase;
+import com.example.ambulncia_atividade.domain.database.entity.AdjacenciaGrafo;
+import com.example.ambulncia_atividade.domain.database.entity.BairroStatus;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -106,31 +106,27 @@ public class GrafoActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     private void carregarDB() {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        AppDatabase db = AppDatabase.getInstance(this);
 
         // TODO: no futuro puxar isso de uma API usando Retrofit, banco local n escala bem
-        Cursor c1 = db.rawQuery("SELECT b.nome, b.lat, b.lng, IFNULL(SUM(h.vagas_totais), 0), IFNULL(SUM(h.vagas_ocupadas), 0) FROM bairros b LEFT JOIN hospitais h ON b.nome = h.nome_bairro GROUP BY b.nome", null);
-        if (c1.moveToFirst()) {
-            do {
-                String nome = c1.getString(0);
-                listaBairros.add(nome);
-                coords.put(nome, new LatLng(c1.getDouble(1), c1.getDouble(2)));
-                vagasLivres.put(nome, (c1.getInt(3) - c1.getInt(4)));
-                adj.put(nome, new ArrayList<>());
-            } while (c1.moveToNext());
+        List<BairroStatus> statusBairros = db.grafoDao().getStatusBairros();
+        if (statusBairros != null) {
+            for (BairroStatus bs : statusBairros) {
+                listaBairros.add(bs.nome);
+                coords.put(bs.nome, new LatLng(bs.lat, bs.lng));
+                vagasLivres.put(bs.nome, (bs.total - bs.ocupadas));
+                adj.put(bs.nome, new ArrayList<>());
+            }
         }
-        c1.close();
 
-        Cursor c2 = db.rawQuery("SELECT bairro_origem, bairro_destino FROM adjacencias_grafo", null);
-        if (c2.moveToFirst()) {
-            do {
-                String origem = c2.getString(0);
-                if (adj.containsKey(origem)) adj.get(origem).add(c2.getString(1));
-            } while (c2.moveToNext());
+        List<AdjacenciaGrafo> adjacencias = db.grafoDao().getTodasAdjacencias();
+        if (adjacencias != null) {
+            for (AdjacenciaGrafo a : adjacencias) {
+                if (adj.containsKey(a.bairroOrigem)) {
+                    adj.get(a.bairroOrigem).add(a.bairroDestino);
+                }
+            }
         }
-        c2.close();
-        db.close();
     }
 
     private void pegarGPS() {
