@@ -35,6 +35,9 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
+                    // Carrega a biblioteca nativa do SQLCipher
+                    System.loadLibrary("sqlcipher");
+
                     // Resgata a chave do cofre
                     byte[] passphrase = SessionManager.getDatabasePassphrase(context);
 
@@ -45,7 +48,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "sos_leitos_room.db")
                             .allowMainThreadQueries()
-                            .openHelperFactory(factory) // <-- A mágica da blindagem
+                            .openHelperFactory(factory)
                             .addCallback(roomCallback)
                             .build();
                 }
@@ -54,7 +57,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    // Callback executado apenas uma vez quando o banco é criado
+    // Callback executao apenas uma vez quando o banco é criado
     private static final RoomDatabase.Callback roomCallback = new RoomDatabase.Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {

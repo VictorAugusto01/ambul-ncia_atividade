@@ -58,7 +58,7 @@ dependencies {
     implementation("androidx.room:room-runtime:$roomVersion")
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
 
-    implementation("net.zetetic:android-database-sqlcipher:4.5.4")
+    implementation("net.zetetic:sqlcipher-android:4.15.0")
     implementation("androidx.sqlite:sqlite:2.4.0")
 
     implementation("com.google.android.gms:play-services-maps:18.2.0")
