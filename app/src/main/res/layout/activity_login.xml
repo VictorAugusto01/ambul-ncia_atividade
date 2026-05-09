@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- TODO: alinhar com a Emanuelly se esse padding 24dp ta bom msm -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_dark"
@@ -12,7 +14,7 @@
         android:padding="24dp"
         android:paddingTop="48dp">
 
-        <!-- Logo + título -->
+        <!-- logo -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,17 +45,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Acesse sua conta"
-                android:textColor="#FF666666"
+                android:textColor="@color/label_cinza"
                 android:textSize="12sp"
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
 
-        <!-- Campo e-mail -->
+        <!-- input email -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="E-MAIL"
-            android:textColor="#FF666666"
+            android:textColor="@color/label_cinza"
             android:textSize="10sp"
             android:letterSpacing="0.08"
             android:layout_marginBottom="6dp"/>
@@ -67,11 +69,12 @@
             android:paddingHorizontal="14dp"
             android:layout_marginBottom="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✉"
-                android:textSize="16sp"
+            <!-- <TextView android:text="✉" ... /> apaguei o emoji pq tava zoado -->
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_email"
+                app:tint="@color/label_cinza"
                 android:layout_marginEnd="10dp"/>
 
             <EditText
@@ -79,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="email@samu.sp.gov.br"
-                android:textColorHint="#FF444444"
+                android:textColorHint="@color/label_cinza"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:inputType="textEmailAddress"
@@ -87,12 +90,12 @@
                 android:singleLine="true"/>
         </LinearLayout>
 
-        <!-- Campo senha -->
+        <!-- input senha -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="SENHA"
-            android:textColor="#FF666666"
+            android:textColor="@color/label_cinza"
             android:textSize="10sp"
             android:letterSpacing="0.08"
             android:layout_marginBottom="6dp"/>
@@ -106,32 +109,41 @@
             android:paddingHorizontal="14dp"
             android:layout_marginBottom="20dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🔒"
-                android:textSize="16sp"
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_lock"
+                app:tint="@color/label_cinza"
                 android:layout_marginEnd="10dp"/>
 
             <EditText
                 android:id="@+id/etSenha"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:hint="••••••••"
-                android:textColorHint="#FF444444"
+                android:textColorHint="@color/label_cinza"
                 android:textColor="@color/white"
                 android:textSize="13sp"
                 android:inputType="textPassword"
                 android:background="@null"
                 android:singleLine="true"/>
+
+            <!-- icon de olhinho p/ ver senha, dps tem q fazer a logica no java -->
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_visibility_off"
+                app:tint="@color/label_cinza"
+                android:layout_marginStart="10dp"/>
         </LinearLayout>
 
-        <!-- Seleção de perfil -->
+        <!-- chips de perfis -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="PERFIL DE ACESSO"
-            android:textColor="#FF666666"
+            android:textColor="@color/label_cinza"
             android:textSize="10sp"
             android:letterSpacing="0.08"
             android:layout_marginBottom="8dp"/>
@@ -151,10 +163,16 @@
                 android:gravity="center"
                 android:layout_marginEnd="6dp"
                 android:background="@drawable/bg_chip_selecionado">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_medical_services"
+                    app:tint="@color/vermelho_sos"
+                    android:layout_marginEnd="5dp"/>
+
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="🚑" android:textSize="14sp" android:layout_marginEnd="5dp"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Socorrista" android:textColor="#FFEF5350" android:textSize="11sp"/>
+                    android:text="Socorrista" android:textColor="@color/vermelho_sos" android:textSize="11sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -166,10 +184,16 @@
                 android:gravity="center"
                 android:layout_marginEnd="6dp"
                 android:background="@drawable/bg_chip_normal">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_local_hospital"
+                    app:tint="@color/label_cinza"
+                    android:layout_marginEnd="5dp"/>
+
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="🏥" android:textSize="14sp" android:layout_marginEnd="5dp"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Hospital" android:textColor="#FF666666" android:textSize="11sp"/>
+                    android:text="Hospital" android:textColor="@color/label_cinza" android:textSize="11sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -181,15 +205,18 @@
                 android:gravity="center"
                 android:background="@drawable/bg_chip_normal">
 
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="@color/label_cinza"
+                    android:layout_marginEnd="5dp"/>
 
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="👤" android:textSize="14sp" android:layout_marginEnd="5dp"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Paciente" android:textColor="#FF666666" android:textSize="11sp"/>
+                    android:text="Paciente" android:textColor="@color/label_cinza" android:textSize="11sp"/>
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Botão entrar -->
         <Button
             android:id="@+id/btnEntrar"
             android:layout_width="match_parent"
@@ -202,18 +229,17 @@
             android:background="@drawable/bg_botao_buscar"
             android:layout_marginBottom="14dp"/>
 
-        <!-- Esqueceu a senha -->
         <TextView
             android:id="@+id/tvEsqueceu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Esqueceu a senha? Recuperar"
-            android:textColor="#FF555555"
+            android:textColor="@color/label_cinza"
             android:textSize="12sp"
             android:gravity="center"
             android:layout_marginBottom="20dp"/>
 
-        <!-- Divisor -->
+        <!-- linha de divisao q da mo trabalho fzr no xml -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -221,14 +247,14 @@
             android:gravity="center_vertical"
             android:layout_marginBottom="16dp">
             <View android:layout_width="0dp" android:layout_height="0.5dp"
-                android:layout_weight="1" android:background="#FF222222"/>
+                android:layout_weight="1" android:background="@color/bg_card_elevado"/>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="  ou continue com  " android:textColor="#FF444444" android:textSize="10sp"/>
+                android:text="  ou continue com  " android:textColor="@color/label_cinza" android:textSize="10sp"/>
             <View android:layout_width="0dp" android:layout_height="0.5dp"
-                android:layout_weight="1" android:background="#FF222222"/>
+                android:layout_weight="1" android:background="@color/bg_card_elevado"/>
         </LinearLayout>
 
-        <!-- Botões sociais -->
+        <!-- TODO: catar os svgs da apple/google/microsoft dps c o gustavo, deixei em texto por enqnt -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -240,7 +266,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="G  Google"
-                android:textColor="#FF888888"
+                android:textColor="@color/label_cinza"
                 android:textSize="12sp"
                 android:background="@drawable/bg_botao_social"
                 android:layout_marginEnd="8dp"/>
@@ -250,7 +276,7 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="🏛  Gov.br"
-                android:textColor="#FF888888"
+                android:textColor="@color/label_cinza"
                 android:textSize="12sp"
                 android:background="@drawable/bg_botao_social"/>
         </LinearLayout>

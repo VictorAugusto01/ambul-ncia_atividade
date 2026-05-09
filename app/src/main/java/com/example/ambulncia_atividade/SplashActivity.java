@@ -2,8 +2,6 @@ package com.example.ambulncia_atividade;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity {
@@ -13,16 +11,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Button btnEntrar = findViewById(R.id.btnEntrarSplash);
-        Button btnCriarConta = findViewById(R.id.btnCriarContaSplash);
+        findViewById(R.id.btnEntrarSplash).setOnClickListener(v ->
+                startActivity(new Intent(this, LoginActivity.class))
+        );
 
-        btnEntrar.setOnClickListener(v -> {
-            startActivity(new Intent(this, LoginActivity.class));
-        });
-
-        btnCriarConta.setOnClickListener(v -> {
-            // Agora o botão chama a tela real de cadastro com a ficha médica
-            startActivity(new Intent(this, CadastroPacienteActivity.class));
-        });
+        findViewById(R.id.btnCriarContaSplash).setOnClickListener(v ->
+                startActivity(new Intent(this, CadastroPacienteActivity.class))
+        );
     }
 }

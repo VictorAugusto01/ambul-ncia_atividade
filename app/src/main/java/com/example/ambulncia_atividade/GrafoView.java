@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,13 +12,20 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
@@ -478,6 +486,137 @@ public class GrafoView extends View {
                     .putString("nome", nome)
                     .putBoolean("logado", true)
                     .apply();
+        }
+    }
+
+    public static class TriagemFragment extends Fragment {
+
+        private EditText etBuscaRg;
+        private Button btnBuscarRg, btnIrParaMapa;
+        private LinearLayout cardFichaPaciente, wrapperHistorico;
+        private TextView tvNomePaciente, tvSangue, tvAlergias, alertaRestricoes;
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            // reaproveitando o layout velho pra n ter q codar XML de novo
+            View view = inflater.inflate(R.layout.activity_triagem, container, false);
+
+            initViews(view);
+
+            btnBuscarRg.setOnClickListener(v -> pesquisarNaBase());
+
+            // Ao inves de abrir tela solta, avisa a MainActivity pra trocar a aba la embaixo
+            btnIrParaMapa.setOnClickListener(v -> {
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).pularParaMapa();
+                }
+            });
+
+            return view;
+        }
+
+        private void initViews(View view) {
+            etBuscaRg = view.findViewById(R.id.etBuscaRg);
+            btnBuscarRg = view.findViewById(R.id.btnBuscarRg);
+            btnIrParaMapa = view.findViewById(R.id.btnIrParaMapa);
+            cardFichaPaciente = view.findViewById(R.id.cardFichaPaciente);
+            tvNomePaciente = view.findViewById(R.id.tvNomePacienteTriagem);
+            tvSangue = view.findViewById(R.id.tvSangueTriagem);
+            tvAlergias = view.findViewById(R.id.tvAlergiasTriagem);
+            alertaRestricoes = view.findViewById(R.id.alertaAlergia);
+
+            wrapperHistorico = new LinearLayout(getContext());
+            wrapperHistorico.setOrientation(LinearLayout.VERTICAL);
+            wrapperHistorico.setPadding(0, 32, 0, 0);
+            cardFichaPaciente.addView(wrapperHistorico);
+
+            cardFichaPaciente.setVisibility(GONE);
+        }
+
+        private void pesquisarNaBase() {
+            String numRg = etBuscaRg.getText().toString().trim();
+
+            if (numRg.isEmpty()) {
+                etBuscaRg.setError("Mano, digita o RG!");
+                return;
+            }
+
+            DatabaseHelper db = new DatabaseHelper(getContext());
+            SQLiteDatabase sql = db.getReadableDatabase();
+            Cursor c = null;
+
+            try {
+                c = sql.rawQuery("SELECT nome_completo, tipo_sanguineo, alergias FROM pacientes WHERE rg = ?", new String[]{numRg});
+
+                if (c.moveToFirst()) {
+                    populaProntuario(c);
+                    montarListaHistorico(sql, numRg);
+                } else {
+                    Toast.makeText(getContext(), "Registro fantasma (não achou ninguem)", Toast.LENGTH_SHORT).show();
+                    cardFichaPaciente.setVisibility(GONE);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "Deu ruim na query do SQLite :(", Toast.LENGTH_SHORT).show();
+            } finally {
+                if (c != null) c.close();
+                sql.close();
+            }
+        }
+
+        private void populaProntuario(Cursor c) {
+            String nome = c.getString(0);
+            String sang = c.getString(1);
+            String alerg = c.getString(2);
+
+            tvNomePaciente.setText("Paciente: " + (nome != null ? nome : "-"));
+            tvSangue.setText("Sangue: " + (sang != null ? sang : "-"));
+
+            // se o cara tiver alergia berrante a gente tem q trocar a cor do card pra avisar o socorrista
+            if (alerg != null && !alerg.trim().isEmpty() && !alerg.equalsIgnoreCase("nenhuma")) {
+                tvAlergias.setText("ALERGIAS: " + alerg);
+                alertaRestricoes.setText("⚠️ ALERTA VERMELHO: CHOQUE ANAFILÁTICO POSSÍVEL");
+                alertaRestricoes.setVisibility(VISIBLE);
+                cardFichaPaciente.setBackgroundColor(Color.parseColor("#3E1A1A"));
+            } else {
+                tvAlergias.setText("Ficha limpa de alergias");
+                alertaRestricoes.setVisibility(GONE);
+                cardFichaPaciente.setBackgroundColor(Color.parseColor("#1E1E1E"));
+            }
+
+            cardFichaPaciente.setVisibility(VISIBLE);
+        }
+
+        private void montarListaHistorico(SQLiteDatabase db, String rgTarget) {
+            wrapperHistorico.removeAllViews();
+
+            TextView t = new TextView(getContext());
+            t.setText("ÚLTIMOS ENCAMINHAMENTOS");
+            t.setTextColor(Color.parseColor("#bfecff"));
+            t.setTextSize(12f);
+            t.setTypeface(null, android.graphics.Typeface.BOLD);
+            t.setPadding(0, 0, 0, 16);
+            wrapperHistorico.addView(t);
+
+            Cursor h = db.rawQuery("SELECT hospital, data_registro FROM historico WHERE rg_paciente = ? ORDER BY id DESC", new String[]{rgTarget});
+
+            if (h.moveToFirst()) {
+                do {
+                    TextView item = new TextView(getContext());
+                    item.setText("• " + h.getString(1) + "  |  " + h.getString(0));
+                    item.setTextColor(Color.WHITE);
+                    item.setPadding(0, 0, 0, 8);
+                    wrapperHistorico.addView(item);
+                } while (h.moveToNext());
+            } else {
+                TextView none = new TextView(getContext());
+                none.setText("Paciente zerado na base (sem historicos passados)");
+                none.setTextColor(Color.GRAY);
+                none.setTypeface(null, android.graphics.Typeface.ITALIC);
+                wrapperHistorico.addView(none);
+            }
+            h.close();
         }
     }
 }

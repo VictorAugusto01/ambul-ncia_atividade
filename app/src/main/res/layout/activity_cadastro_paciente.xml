@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0d1117"
+    android:background="@color/bg_dark"
     android:fillViewport="true">
 
     <LinearLayout
@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NOVO PACIENTE"
-            android:textColor="#EF5350"
+            android:textColor="@color/vermelho_sos"
             android:textSize="14sp"
             android:textStyle="bold"
             android:letterSpacing="0.1" />
@@ -24,95 +24,108 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Crie sua conta"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/white"
             android:textSize="28sp"
             android:textStyle="bold"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Dados de Login -->
-        <EditText
-            android:id="@+id/etCadNome"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_chip_normal"
-            android:hint="Nome Completo"
-            android:textColorHint="#666666"
-            android:textColor="#FFFFFF"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="12dp"/>
-
-        <EditText
-            android:id="@+id/etCadEmail"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_chip_normal"
-            android:hint="E-mail"
-            android:inputType="textEmailAddress"
-            android:textColorHint="#666666"
-            android:textColor="#FFFFFF"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="12dp"/>
-
-        <EditText
-            android:id="@+id/etCadSenha"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_chip_normal"
-            android:hint="Senha"
-            android:inputType="textPassword"
-            android:textColorHint="#666666"
-            android:textColor="#FFFFFF"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="24dp"/>
-
-        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#1e2a3a" android:layout_marginBottom="24dp"/>
-
-        <!-- Ficha Médica -->
-        <EditText
-            android:id="@+id/etCadRg"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_chip_normal"
-            android:hint="RG (Apenas números)"
-            android:inputType="number"
-            android:textColorHint="#666666"
-            android:textColor="#FFFFFF"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="12dp"/>
-
-        <EditText
-            android:id="@+id/etCadSangue"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_chip_normal"
-            android:hint="Tipo Sanguíneo (Ex: O+, AB-)"
-            android:textColorHint="#666666"
-            android:textColor="#FFFFFF"
-            android:paddingHorizontal="16dp"
-            android:layout_marginBottom="12dp"/>
-
-        <EditText
-            android:id="@+id/etCadAlergias"
+        <!-- novo estilo de card agrupando -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="80dp"
-            android:background="@drawable/bg_chip_normal"
-            android:hint="Alergias graves (ou deixe em branco)"
-            android:textColorHint="#666666"
-            android:textColor="#FFFFFF"
-            android:gravity="top"
-            android:padding="16dp"
-            android:layout_marginBottom="32dp"/>
+            android:background="@drawable/shape_card_arredondado"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-        <Button
-            android:id="@+id/btnFinalizarCadastro"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="CADASTRAR E ENTRAR"
-            android:textColor="#FFFFFF"
-            android:backgroundTint="#EF5350"
-            android:textStyle="bold" />
+            <!-- Dados de Login -->
+            <EditText
+                android:id="@+id/etCadNome"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_chip_normal"
+                android:hint="Nome Completo"
+                android:textColorHint="@color/label_cinza"
+                android:textColor="@color/white"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="12dp"/>
+
+            <EditText
+                android:id="@+id/etCadEmail"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_chip_normal"
+                android:hint="E-mail"
+                android:inputType="textEmailAddress"
+                android:textColorHint="@color/label_cinza"
+                android:textColor="@color/white"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="12dp"/>
+
+            <EditText
+                android:id="@+id/etCadSenha"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_chip_normal"
+                android:hint="Senha"
+                android:inputType="textPassword"
+                android:textColorHint="@color/label_cinza"
+                android:textColor="@color/white"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="24dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/bg_dark"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Ficha Médica -->
+            <EditText
+                android:id="@+id/etCadRg"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_chip_normal"
+                android:hint="RG (Apenas números)"
+                android:inputType="number"
+                android:textColorHint="@color/label_cinza"
+                android:textColor="@color/white"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="12dp"/>
+
+            <EditText
+                android:id="@+id/etCadSangue"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_chip_normal"
+                android:hint="Tipo Sanguíneo (Ex: O+, AB-)"
+                android:textColorHint="@color/label_cinza"
+                android:textColor="@color/white"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="12dp"/>
+
+            <EditText
+                android:id="@+id/etCadAlergias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="80dp"
+                android:background="@drawable/bg_chip_normal"
+                android:hint="Alergias graves (ou deixe em branco)"
+                android:textColorHint="@color/label_cinza"
+                android:textColor="@color/white"
+                android:gravity="top"
+                android:padding="16dp"
+                android:layout_marginBottom="32dp"/>
+
+            <Button
+                android:id="@+id/btnFinalizarCadastro"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="CADASTRAR E ENTRAR"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/vermelho_sos"
+                android:textStyle="bold" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
