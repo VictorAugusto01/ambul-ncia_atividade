@@ -2,20 +2,18 @@ package com.example.ambulncia_atividade;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
 public class CadastroPacienteActivity extends AppCompatActivity {
 
     private EditText etNome, etEmail, etSenha, etRg, etSangue, etAlergias;
-    private Button btnCadastrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,82 +26,53 @@ public class CadastroPacienteActivity extends AppCompatActivity {
         etRg = findViewById(R.id.etCadRg);
         etSangue = findViewById(R.id.etCadSangue);
         etAlergias = findViewById(R.id.etCadAlergias);
-        btnCadastrar = findViewById(R.id.btnFinalizarCadastro);
 
-        btnCadastrar.setOnClickListener(v -> processarCadastro());
+        findViewById(R.id.btnFinalizarCadastro).setOnClickListener(v -> salvar());
     }
 
-    private void processarCadastro() {
-        String nome = etNome.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String senha = etSenha.getText().toString().trim();
-        String rg = etRg.getText().toString().trim();
-        String sangue = etSangue.getText().toString().trim();
-        String alergias = etAlergias.getText().toString().trim();
+    private void salvar() {
+        String n = etNome.getText().toString().trim();
+        String e = etEmail.getText().toString().trim();
+        String s = etSenha.getText().toString().trim();
+        String r = etRg.getText().toString().trim();
+        String b = etSangue.getText().toString().trim();
+        String a = etAlergias.getText().toString().trim();
 
-        // fail fast pra n processar atoa
-        if (TextUtils.isEmpty(nome) || TextUtils.isEmpty(email) || TextUtils.isEmpty(senha) || TextUtils.isEmpty(rg)) {
-            Toast.makeText(this, "Preencha os campos obrigatórios.", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        if (TextUtils.isEmpty(n) || TextUtils.isEmpty(e) || TextUtils.isEmpty(s) || TextUtils.isEmpty(r)) return;
+        if (a.isEmpty()) a = "Nenhuma";
 
-        // se o cara n botar alergia, joga padrao senao da nullpointer no card de triagem
-        if (alergias.isEmpty()) alergias = "Nenhuma";
-
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        DatabaseHelper dbh = new DatabaseHelper(this);
+        SQLiteDatabase db = dbh.getWritableDatabase();
 
         try {
-            db.beginTransaction(); // trava a transacao pq sao 2 inserts casados
+            db.beginTransaction();
+            ContentValues user = new ContentValues();
+            user.put("email", e);
+            user.put("senha_hash", s);
+            user.put("role", "PACIENTE");
+            long uid = db.insert("usuarios", null, user);
 
-            ContentValues userValues = new ContentValues();
-            userValues.put("email", email);
-            userValues.put("senha_hash", senha); // TODO: urgete aplicar Bcrypt aqui
-            userValues.put("role", "PACIENTE");
-            long userId = db.insert("usuarios", null, userValues);
+            if (uid != -1) {
+                ContentValues pac = new ContentValues();
+                pac.put("id_usuario", uid);
+                pac.put("nome_completo", n);
+                pac.put("rg", r);
+                pac.put("tipo_sanguineo", b.toUpperCase());
+                pac.put("alergias", a);
+                db.insert("pacientes", null, pac);
+                db.setTransactionSuccessful();
 
-            if (userId == -1) {
-                Toast.makeText(this, "E-mail já cadastrado.", Toast.LENGTH_SHORT).show();
-                return;
+                getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE).edit()
+                        .putString("email", e).putString("perfil", "PACIENTE").putString("nome", n).putBoolean("logado", true).apply();
+
+                Intent i = new Intent(this, PerfilActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
             }
-
-            ContentValues pacienteValues = new ContentValues();
-            pacienteValues.put("id_usuario", userId);
-            pacienteValues.put("nome_completo", nome);
-            pacienteValues.put("rg", rg);
-            pacienteValues.put("tipo_sanguineo", sangue.toUpperCase());
-            pacienteValues.put("alergias", alergias);
-            long pacienteId = db.insert("pacientes", null, pacienteValues);
-
-            if (pacienteId == -1) {
-                Toast.makeText(this, "RG já cadastrado.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            db.setTransactionSuccessful(); // sucesso, comita as duas
-
-            salvarSessaoLocal(email, nome);
-            Intent intent = new Intent(this, PerfilActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-
-        } catch (Exception e) {
-            // Log.e("CADASTRO_ERRO", "falhou no insert: ", e);
-            Toast.makeText(this, "Erro interno no banco.", Toast.LENGTH_SHORT).show();
         } finally {
             db.endTransaction();
             db.close();
         }
-    }
-
-    private void salvarSessaoLocal(String email, String nome) {
-        SharedPreferences prefs = getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE);
-        prefs.edit()
-                .putString("email", email)
-                .putString("perfil", "PACIENTE")
-                .putString("nome", nome)
-                .putBoolean("logado", true)
-                .apply();
     }
 }

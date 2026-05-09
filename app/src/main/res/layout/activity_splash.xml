@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Roteamento Inteligente\nde Ambulâncias"
-        android:textColor="#FF888888"
+        android:textColor="@color/label_cinza"
         android:textSize="14sp"
         android:gravity="center"
         android:lineSpacingExtra="4dp"
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Zona Oeste · São Paulo"
-        android:textColor="#FFEF5350"
+        android:textColor="@color/vermelho_sos"
         android:textSize="11sp"
         android:background="@drawable/bg_badge_splash"
         android:paddingHorizontal="14dp"
@@ -79,7 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:text="CRIAR CONTA"
-        android:textColor="#FF888888"
+        android:textColor="@color/label_cinza"
         android:textSize="13sp"
         android:background="@drawable/bg_botao_secundario"/>
 
@@ -88,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="v1.0 · Desenvolvido para PDM 2025"
-        android:textColor="#FF333333"
+        android:textColor="@color/label_cinza"
         android:textSize="10sp"
         android:layout_marginTop="32dp"/>
 

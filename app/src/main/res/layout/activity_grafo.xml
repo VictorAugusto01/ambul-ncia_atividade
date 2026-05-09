@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Nota pro Revisor: Estrutura em RelativeLayout usada para ancorar o header e footer
-  nas bordas, forçando o SupportMapFragment a respeitar os boundaries do meio da tela.
+  gambi em relative layout pra forçar o map fragment ficar no meio.
+  se mudar pra linear caga o mapa todo, entao deixa assim msm
 -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0d1117">
+    android:background="@color/bg_dark">
 
     <LinearLayout
         android:id="@+id/headerGrafo"
@@ -17,7 +17,7 @@
         android:orientation="horizontal"
         android:padding="12dp"
         android:gravity="center_vertical"
-        android:background="#1e2a3a"
+        android:background="@color/bg_card_elevado"
         android:elevation="4dp">
 
         <Button
@@ -25,7 +25,7 @@
             android:layout_width="40dp"
             android:layout_height="48dp"
             android:text="←"
-            android:backgroundTint="#EF5350"
+            android:backgroundTint="@color/vermelho_sos"
             android:padding="0dp"/>
 
         <Button
@@ -34,7 +34,7 @@
             android:layout_height="48dp"
             android:layout_marginStart="6dp"
             android:text="📍"
-            android:backgroundTint="#4CAF50"
+            android:backgroundTint="@color/verde_ok"
             android:padding="0dp"/>
 
         <Spinner
@@ -43,7 +43,7 @@
             android:layout_height="48dp"
             android:layout_weight="1"
             android:layout_marginHorizontal="6dp"
-            android:backgroundTint="#FFFFFF" />
+            android:backgroundTint="@color/white" />
 
         <Button
             android:id="@+id/btnBuscarGrafo"
@@ -51,7 +51,7 @@
             android:layout_height="48dp"
             android:text="BUSCAR"
             android:textStyle="bold"
-            android:backgroundTint="#EF5350" />
+            android:backgroundTint="@color/vermelho_sos" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +61,7 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="#151d26"
+        android:background="@color/bg_dark"
         android:elevation="4dp">
 
         <LinearLayout
@@ -69,8 +69,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp"
-            android:background="@drawable/bg_chip_normal"
+            android:padding="16dp"
+            android:background="@drawable/shape_card_arredondado"
             android:visibility="gone"
             tools:visibility="visible">
 
@@ -78,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="✅ HOSPITAL RECOMENDADO"
-                android:textColor="#4CAF50"
+                android:textColor="@color/verde_ok"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -87,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="UPA Butantã"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:layout_marginTop="4dp" />
@@ -104,7 +104,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     tools:text="60 vagas livres"
-                    android:textColor="#81C784" />
+                    android:textColor="@color/verde_ok" />
 
                 <TextView
                     android:id="@+id/tvDistResultadoGrafo"
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     tools:text="1 bairros de distância"
-                    android:textColor="#64B5F6" />
+                    android:textColor="@color/azul_info" />
             </LinearLayout>
         </LinearLayout>
 
@@ -121,8 +121,8 @@
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_marginTop="12dp"
-            android:background="#0a0e14"
-            android:padding="8dp">
+            android:background="@drawable/shape_card_arredondado"
+            android:padding="12dp">
 
             <LinearLayout
                 android:id="@+id/logContainerGrafo"

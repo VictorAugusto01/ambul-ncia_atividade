@@ -1,41 +1,47 @@
 package com.example.ambulncia_atividade;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import com.example.ambulncia_atividade.domain.database.DatabaseHelper;
 
-public class PerfilActivity extends AppCompatActivity {
+public class PerfilFragment extends Fragment {
 
     private String mail, role, nome;
     private LinearLayout cardFicha, cardStats, listProx, listViews;
     private TextView tvRg, tvSangue, tvAlergia;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_perfil);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.activity_perfil, container, false);
 
-        SharedPreferences sf = getSharedPreferences("sos_leitos_prefs", MODE_PRIVATE);
+        SharedPreferences sf = requireActivity().getSharedPreferences("sos_leitos_prefs", Context.MODE_PRIVATE);
         nome = sf.getString("nome", "");
         mail = sf.getString("email", "");
         role = sf.getString("perfil", "");
 
-        cardFicha = findViewById(R.id.containerFichaPaciente);
-        cardStats = findViewById(R.id.containerEstatisticas);
-        listProx = findViewById(R.id.containerHospitaisProximos);
-        listViews = findViewById(R.id.listaHospitaisPerfil);
-        tvRg = findViewById(R.id.tvPerfilRg);
-        tvSangue = findViewById(R.id.tvPerfilSangue);
-        tvAlergia = findViewById(R.id.tvPerfilAlergias);
+        cardFicha = v.findViewById(R.id.containerFichaPaciente);
+        cardStats = v.findViewById(R.id.containerEstatisticas);
+        listProx = v.findViewById(R.id.containerHospitaisProximos);
+        listViews = v.findViewById(R.id.listaHospitaisPerfil);
+        tvRg = v.findViewById(R.id.tvPerfilRg);
+        tvSangue = v.findViewById(R.id.tvPerfilSangue);
+        tvAlergia = v.findViewById(R.id.tvPerfilAlergias);
 
-        setupHeader();
+        setupHeader(v);
 
         if (role.equals("PACIENTE")) {
             cardStats.setVisibility(View.GONE);
@@ -47,27 +53,33 @@ public class PerfilActivity extends AppCompatActivity {
             cardStats.setVisibility(View.VISIBLE);
             cardFicha.setVisibility(View.GONE);
             listProx.setVisibility(View.GONE);
-            ((TextView) findViewById(R.id.tvPerfilEmail)).setText(mail);
+            ((TextView) v.findViewById(R.id.tvPerfilEmail)).setText(mail);
         }
 
-        findViewById(R.id.btnVoltarPerfil).setOnClickListener(v -> finish());
-        findViewById(R.id.btnLogout).setOnClickListener(v -> {
+        v.findViewById(R.id.btnVoltarPerfil).setVisibility(View.GONE);
+
+        v.findViewById(R.id.btnLogout).setOnClickListener(btn -> {
             sf.edit().clear().apply();
-            finishAffinity();
+            Intent i = new Intent(getActivity(), SplashActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+            requireActivity().finish();
         });
+
+        return v;
     }
 
-    private void setupHeader() {
-        TextView avatar = findViewById(R.id.tvAvatar);
+    private void setupHeader(View v) {
+        TextView avatar = v.findViewById(R.id.tvAvatar);
         String[] p = nome.split(" ");
         String a = p.length > 1 ? p[0].substring(0, 1) + p[1].substring(0, 1) : nome.substring(0, Math.min(2, nome.length()));
         avatar.setText(a.toUpperCase());
-        ((TextView) findViewById(R.id.tvPerfilNome)).setText(nome);
-        ((TextView) findViewById(R.id.tvPerfilRole)).setText(role);
+        ((TextView) v.findViewById(R.id.tvPerfilNome)).setText(nome);
+        ((TextView) v.findViewById(R.id.tvPerfilRole)).setText(role);
     }
 
     private void loadFicha() {
-        DatabaseHelper dbh = new DatabaseHelper(this);
+        DatabaseHelper dbh = new DatabaseHelper(getContext());
         SQLiteDatabase db = dbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT p.rg, p.tipo_sanguineo, p.alergias FROM pacientes p INNER JOIN usuarios u ON p.id_usuario = u.id WHERE u.email = ?", new String[]{mail});
         if (c.moveToFirst()) {
@@ -82,13 +94,13 @@ public class PerfilActivity extends AppCompatActivity {
     }
 
     private void loadVagas() {
-        DatabaseHelper dbh = new DatabaseHelper(this);
+        DatabaseHelper dbh = new DatabaseHelper(getContext());
         SQLiteDatabase db = dbh.getReadableDatabase();
         Cursor c = db.rawQuery("SELECT nome, (vagas_totais - vagas_ocupadas) as l FROM hospitais WHERE l > 0 LIMIT 3", null);
         listViews.removeAllViews();
         if (c.moveToFirst()) {
             do {
-                TextView t = new TextView(this);
+                TextView t = new TextView(getContext());
                 t.setText(c.getString(0) + "\n" + c.getInt(1) + " vagas");
                 t.setTextColor(Color.parseColor("#81C784"));
                 t.setPadding(0, 0, 0, 16);

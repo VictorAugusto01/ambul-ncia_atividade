@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0d1117"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvOlaDoutor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Olá, Socorrista"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvSubtitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Veja o panorama geral da Zona Oeste"
+        android:textColor="#AAAAAA"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tvOlaDoutor"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="4dp" />
+
+    <GridLayout
+        android:id="@+id/gridStats"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/tvSubtitulo">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_chip_normal"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:text="Ambulâncias Ativas" android:textColor="#bfecff" android:textSize="12sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="12" android:textColor="@color/white" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="Em operação" android:textColor="#888888" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_chip_normal"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:text="Hospitais c/ Vagas" android:textColor="#81C784" android:textSize="12sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="8" android:textColor="@color/white" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="Disponíveis agora" android:textColor="#888888" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_chip_normal"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:text="Emergências Hoje" android:textColor="#EF5350" android:textSize="12sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="24" android:textColor="@color/white" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="+12% vs ontem" android:textColor="#EF5350" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnWeight="1"
+            android:layout_margin="8dp"
+            android:background="@drawable/bg_chip_normal"
+            android:orientation="vertical"
+            android:padding="16dp">
+            <TextView android:text="Tempo Médio" android:textColor="#64B5F6" android:textSize="12sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="18 min" android:textColor="@color/white" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:text="Até ao hospital ideal" android:textColor="#888888" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </GridLayout>
+
+    <Button
+        android:id="@+id/btnVerMapaCompleto"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Ver Mapa de Operações"
+        android:textColor="@color/white"
+        android:backgroundTint="#EF5350"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/gridStats" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

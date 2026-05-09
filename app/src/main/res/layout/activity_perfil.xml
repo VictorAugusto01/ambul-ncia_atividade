@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- TODO: Extrair os assets visuais e chaves HEX apos aprovação do MVP -->
+<!-- dps a gente passa pro strings.xml pra ficar no padrao -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0d1117"
+    android:background="@color/bg_dark"
     android:fillViewport="true">
 
     <LinearLayout
@@ -15,19 +16,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EF5350"
+            android:background="@color/vermelho_sos"
             android:orientation="horizontal"
             android:padding="16dp"
             android:gravity="center_vertical">
 
+            <!-- Botao de voltar agr usando o SVG oficial -->
             <Button
                 android:id="@+id/btnVoltarPerfil"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:text="←"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#D32F2F"
-                android:padding="0dp"/>
+                app:icon="@drawable/ic_arrow_back"
+                app:iconTint="@color/white"
+                android:backgroundTint="@color/vermelho_escuro"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                android:padding="0dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -39,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SOS LEITOS"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -47,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Meu perfil"
-                    android:textColor="#FFCDD2"
+                    android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
@@ -67,27 +75,33 @@
                 android:background="@drawable/bg_chip_normal"
                 android:gravity="center"
                 tools:text="GA"
-                android:textColor="#EF5350"
+                android:textColor="@color/vermelho_sos"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
+            <!-- Nomes puxados dinamicos no java dps -->
             <TextView
                 android:id="@+id/tvPerfilNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="Gabriel Alex"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_marginTop="12dp"/>
 
+            <!-- tirei o emoji de text e pus o ic_person direto na tag -->
             <TextView
                 android:id="@+id/tvPerfilRole"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:text="👤 PACIENTE · SAMU SP"
-                android:textColor="#AAAAAA"
+                app:drawableStartCompat="@drawable/ic_person"
+                app:drawableTint="@color/label_cinza"
+                android:drawablePadding="6dp"
+                tools:text="PACIENTE · SAMU SP"
+                android:textColor="@color/label_cinza"
                 android:textSize="12sp"
+                android:gravity="center_vertical"
                 android:layout_marginTop="4dp"/>
         </LinearLayout>
 
@@ -105,7 +119,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="MEU PRONTUÁRIO"
-                android:textColor="#EF5350"
+                android:textColor="@color/vermelho_sos"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="8dp"/>
@@ -114,15 +128,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/bg_chip_normal"
-                android:padding="16dp">
+                android:background="@drawable/shape_card_arredondado"
+                android:padding="20dp">
 
                 <TextView
                     android:id="@+id/tvPerfilRg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="RG: 60.333.555-1"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
@@ -130,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="Sangue: O+"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/white"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
@@ -138,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:text="Alergias: Dipirona"
-                    android:textColor="#FFFFFF"/>
+                    android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -151,34 +165,35 @@
             android:paddingHorizontal="24dp"
             android:visibility="gone">
 
+            <!-- aplicando as bordas nos cards avulsos aqui -->
             <TextView
                 android:id="@+id/tvPerfilEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_normal"
+                android:background="@drawable/shape_card_arredondado"
                 android:padding="16dp"
                 tools:text="medico@gmail.com"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/tvPerfilUnidade"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_normal"
+                android:background="@drawable/shape_card_arredondado"
                 android:padding="16dp"
                 android:text="Base Lapa – Zona Oeste"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/white"
                 android:layout_marginBottom="8dp"/>
 
             <TextView
                 android:id="@+id/tvPerfilAtendimentos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_chip_normal"
+                android:background="@drawable/shape_card_arredondado"
                 android:padding="16dp"
                 android:text="127 atendimentos este mês"
-                android:textColor="#FFFFFF"/>
+                android:textColor="@color/white"/>
         </LinearLayout>
 
         <LinearLayout
@@ -194,7 +209,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="HOSPITAIS DISPONÍVEIS"
-                android:textColor="#4CAF50"
+                android:textColor="@color/verde_ok"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp"/>
@@ -216,8 +231,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:text="SAIR DA CONTA"
-                android:textColor="#FFFFFF"
-                android:backgroundTint="#EF5350"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/vermelho_sos"
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
