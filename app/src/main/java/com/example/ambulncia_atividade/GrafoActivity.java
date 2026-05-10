@@ -2,10 +2,12 @@ package com.example.ambulncia_atividade;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -29,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -178,6 +182,20 @@ public class GrafoActivity extends AppCompatActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+
+        // Magia acontecendo: injetando o JSON do modo noturno
+        try {
+            boolean success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.map_style));
+
+            if (!success) {
+                Log.e("MAPA_STYLE", "O parse do estilo falhou. Verifica se o JSON tá válido.");
+            }
+        } catch (Resources.NotFoundException e) {
+            Log.e("MAPA_STYLE", "Arquivo map_style.json não encontrado na pasta raw.", e);
+        }
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(-23.5505, -46.6333), 11f));
         resetMapa();
     }

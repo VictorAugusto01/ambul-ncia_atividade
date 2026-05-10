@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         isModoCadastro = "cadastro".equals(getIntent().getStringExtra("modo"));
         if (isModoCadastro) {
             btnEntrar.setText("CRIAR CONTA");
-            selecionarChip(chipPaciente); // força paciente se tiver criando conta
+            selecionarChip(chipPaciente);
             perfilSelecionado = "PACIENTE";
         } else {
             selecionarChip(chipSocorrista);
@@ -169,7 +169,7 @@ public class LoginActivity extends AppCompatActivity {
         } else if (role.equalsIgnoreCase("ADMIN") || role.equalsIgnoreCase("HOSPITAL")) {
             intent = new Intent(this, PainelAdminActivity.class);
         } else {
-            intent = new Intent(this, TriagemActivity.class);
+            intent = new Intent(this, MainActivity.class);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

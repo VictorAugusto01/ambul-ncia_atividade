@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  TODO: Extrair as cores HEX para o colors.xml
-  Nota pro Revisor: Layout feito no estilo "linha de lista" para ser injetado
-  dinamicamente dentro do card do bairro. Mantido em LinearLayout pro MVP.
--->
+<!-- layout de cada linha pra jogar dinamicamente dentro do bairro. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,7 +15,7 @@
         android:layout_width="4dp"
         android:layout_height="32dp"
         android:layout_marginEnd="12dp"
-        android:background="#4CAF50" />
+        android:background="@color/verde_ok" />
 
     <!-- Nome do Hospital -->
     <TextView
@@ -28,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         tools:text="Hospital Metropolitano"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -45,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="25 vagas"
-            android:textColor="#81C784"
+            android:textColor="@color/verde_ok"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -61,14 +57,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="75"
-                android:textColor="#AAAAAA"
+                android:textColor="@color/label_cinza"
                 android:textSize="11sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" / "
-                android:textColor="#666666"
+                android:textColor="@color/label_cinza"
                 android:textSize="11sp" />
 
             <TextView
@@ -76,7 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:text="100"
-                android:textColor="#666666"
+                android:textColor="@color/label_cinza"
                 android:textSize="11sp" />
         </LinearLayout>
     </LinearLayout>

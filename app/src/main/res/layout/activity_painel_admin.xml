@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#121212"
+    android:background="@color/bg_dark"
     android:padding="20dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="🛡️ PAINEL ADMINISTRATIVO"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="8dp"/>
@@ -20,33 +20,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Olá, Administrador!"
-        android:textColor="#00E5FF"
+        android:textColor="@color/azul_info"
         android:textSize="16sp"
         android:layout_marginBottom="32dp"/>
 
-    <!-- Botões Placeholder de Funcionalidades Futuras -->
+    <!-- Botões Placeholder de Funcionalidades Futuras (tira o em breve dps q a gente codar kkk) -->
     <Button
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="🏥 GERENCIAR HOSPITAIS E VAGAS (Em breve)"
-        android:backgroundTint="#1E1E1E"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/bg_card_elevado"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="👥 GERENCIAR ACESSOS DE SOCORRISTAS (Em breve)"
-        android:backgroundTint="#1E1E1E"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/bg_card_elevado"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp"/>
-        
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="📊 AUDITORIA DE ROTAS (Em breve)"
-        android:backgroundTint="#1E1E1E"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/bg_card_elevado"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp"/>
 
     <!-- Espaçador invisível para empurrar o botão Sair para o final da tela -->
@@ -60,8 +60,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:text="SAIR DO SISTEMA"
-        android:backgroundTint="#D32F2F"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/vermelho_escuro"
+        android:textColor="@color/white"
         android:textStyle="bold"/>
 
 </LinearLayout>

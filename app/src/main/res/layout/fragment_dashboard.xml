@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0d1117"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/tvOlaDoutor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Olá, Socorrista"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tvSubtitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Veja o panorama geral da Zona Oeste"
+            android:textColor="#AAAAAA"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@id/tvOlaDoutor"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="4dp" />
+
+        <GridLayout
+            android:id="@+id/gridStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/tvSubtitulo">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="#1A202C"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView android:text="Ambulâncias Ativas" android:textColor="#bfecff" android:textSize="12sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="12" android:textColor="@color/white" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="8dp"
+                android:background="#1A202C"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView android:text="Hospitais c/ Vagas" android:textColor="#81C784" android:textSize="12sp" android:textStyle="bold" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="8" android:textColor="@color/white" android:textSize="28sp" android:textStyle="bold" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </GridLayout>
+
+        <LinearLayout
+            android:id="@+id/containerBusca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@id/gridStats">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Despacho Rápido (BFS)"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerBairro"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#1A202C"
+                android:layout_marginBottom="16dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnBuscar"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="55dp"
+                    android:text="Buscar Vaga"
+                    android:backgroundTint="#EF5350"
+                    android:textColor="@color/white"
+                    android:layout_marginEnd="8dp"/>
+
+                <Button
+                    android:id="@+id/btnSimular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp"
+                    android:text="📍 Simulador GPS"
+                    android:backgroundTint="#4CAF50"
+                    android:textColor="@color/white"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnNavegar"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:text="🗺️ Iniciar Rota (Waze/Maps)"
+                android:backgroundTint="#2196F3"
+                android:textColor="@color/white"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/tvLog"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#AAAAAA"
+                android:textSize="12sp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="monospace"/>
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
