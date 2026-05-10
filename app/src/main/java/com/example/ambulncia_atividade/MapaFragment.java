@@ -33,16 +33,11 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Dash;
-import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PatternItem;
-import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -217,14 +212,11 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
         mMap.clear();
 
         Set<String> renderizados = new HashSet<>();
-        List<PatternItem> tracejado = Arrays.asList(new Dash(20), new Gap(20));
-
         for (String origem : adj.keySet()) {
             for (String destino : adj.get(origem)) {
                 String idKey = origem.compareTo(destino) < 0 ? origem + destino : destino + origem;
                 if (!renderizados.contains(idKey)) {
                     renderizados.add(idKey);
-                    mMap.addPolyline(new PolylineOptions().add(coords.get(origem), coords.get(destino)).width(6f).color(Color.parseColor("#18FFFF")).pattern(tracejado));
                 }
             }
         }
@@ -312,7 +304,6 @@ public class MapaFragment extends Fragment implements OnMapReadyCallback {
 
         if (localRealAmbulancia != null) percurso.add(localRealAmbulancia);
 
-        mMap.addPolyline(new PolylineOptions().addAll(percurso).width(16f).color(Color.parseColor("#00E676")).zIndex(100));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(percurso.get(percurso.size() - 1), 12f));
     }
 }

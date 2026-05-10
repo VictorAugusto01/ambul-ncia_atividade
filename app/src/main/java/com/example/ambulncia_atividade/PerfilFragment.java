@@ -53,23 +53,11 @@ public class PerfilFragment extends Fragment {
             ((TextView) v.findViewById(R.id.tvPerfilEmail)).setText(mail);
         }
 
-        listProx.setVisibility(View.VISIBLE);
-        loadVagas();
-
         v.findViewById(R.id.btnVoltarPerfil).setVisibility(View.GONE);
 
         v.findViewById(R.id.btnLogout).setOnClickListener(btn -> {
-            // limpa a sessao
             sf.edit().clear().apply();
-
-            // abre o login de forma limpa
-            Intent i = new Intent(getActivity(), LoginActivity.class);
             startActivity(i);
-
-            // mata so a tela atual sem afetar a memoria do android
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
         });
 
         return v;
