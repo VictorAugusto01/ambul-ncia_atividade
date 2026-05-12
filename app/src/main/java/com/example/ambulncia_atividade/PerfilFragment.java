@@ -63,7 +63,13 @@ public class PerfilFragment extends Fragment {
 
         // Correção do Bug e Logout Seguro
         v.findViewById(R.id.btnLogout).setOnClickListener(btn -> {
-            sf.edit().clear().apply(); // Limpa o cofre
+            sf.edit()
+                    .remove("email")
+                    .remove("perfil")
+                    .remove("nome")
+                    .putBoolean("logado", false)
+                    .apply(); // Mantém a db_key intacta!
+
             Intent intent = new Intent(getActivity(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

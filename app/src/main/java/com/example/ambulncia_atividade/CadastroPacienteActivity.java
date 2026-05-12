@@ -99,7 +99,9 @@ public class CadastroPacienteActivity extends AppCompatActivity {
         } catch (Exception e) {
             Toast.makeText(this, "Erro interno no banco.", Toast.LENGTH_SHORT).show();
         } finally {
-            db.endTransaction();
+            if (db.inTransaction()) {
+                db.endTransaction();
+            }
         }
     }
 
