@@ -24,6 +24,8 @@ public class PerfilActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Bloqueia Print e Gravação de Tela (OWASP M1)
+        getWindow().setFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE, android.view.WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_perfil);
 
         SharedPreferences sf = SessionManager.getSecurePrefs(this);
